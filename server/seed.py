@@ -64,3 +64,5 @@ with app.app_context():
             db.session.add(parcel)
 
     db.session.commit()
+
+print("Database has been seeded successfully!")
