@@ -1,4 +1,4 @@
-from config import db
+from config import db, bcrypt
 from datetime import datetime
 
 # Users table with its attributes
@@ -12,6 +12,13 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     #admin and user roles
     role = db.Column(db.String(255), nullable=False)
+
+    def set_password(self, password):
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        self.password = hashed_password
+
+    def check_password(self, password):
+        return bcrypt.checkpw(password.encode('utf-8'), self.password)
 
 # Parcels table with its attributes
 class Parcel(db.Model):
