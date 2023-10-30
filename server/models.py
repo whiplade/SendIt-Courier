@@ -1,6 +1,5 @@
 from config import db, bcrypt
 from datetime import datetime
-import bcrypt
 
 # Users table with its attributes
 class User(db.Model):
@@ -15,12 +14,22 @@ class User(db.Model):
     role = db.Column(db.String(255), nullable=False)
 
     def set_password(self, password):
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        self.password = hashed_password
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode('utf-8'), self.password)
+        return bcrypt.check_password_hash(self.password, password)
+     
+    def get_id(self):
+        return str(self.user_id)
+    
+    def is_authenticated(self):
+        return True
+    
+    def is_active(self):
+        return True
+    
+    def is_anonymous(self):
+        return False
 
 # Parcels table with its attributes
 class Parcel(db.Model):

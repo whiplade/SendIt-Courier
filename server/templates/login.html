@@ -1,59 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 20px;
-            margin: 0;
-        }
-        form {
-            max-width: 300px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .form-check-label {
-            margin-left: 5px;
-        }
-        .btn {
-            background-color: #007BFF;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
     <h1>Login</h1>
     <form method="POST" action="/login">
         {{ form.hidden_tag() }}
@@ -81,7 +30,6 @@
         </form>
     </div>
 
-    <!-- Add this code block to display flash messages -->
     <div class="flash-messages">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -95,3 +43,4 @@
     </div>
 </body>
 </html>
+{% endblock %}
