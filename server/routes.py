@@ -37,11 +37,11 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if current_user.is_authenticated:
-        flash('You are already signed in.', 'info')
-        return redirect(url_for('dashboard'))
+    # if current_user.is_authenticated:
+    #     flash('You are already signed in.', 'info')
+    #     return redirect(url_for('dashboard'))
     
-    if form.validate_on_submit():
+    if request.method == 'POST':
         username_or_email = form.username_or_email.data
         password = form.password.data
         user = User.query.filter((User.email == username_or_email) | (User.username == username_or_email)).first()
