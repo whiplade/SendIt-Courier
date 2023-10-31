@@ -8,6 +8,9 @@ import Pricing from './components/Landing/Pricing';
 import Login from './components/Landing/Login';
 import SignUp from './components/Landing/Signup';
 import Landing from './components/Landing/Landing';
+import User from './components/User/User';
+import Admin from './components/Admin/Admin';
+
 const NavBar = () => (
  <div className='Navcomponent'>
   <img src='https://cdn-icons-png.flaticon.com/128/75/75784.png?uid=R122397876&track=ais' alt='alt' className='nav-icon' />
@@ -28,6 +31,10 @@ const NavBar = () => (
 const App = () => (
   <Router>
     <div className="App">
+      <Routes>
+        <Route path="/user" element={<User />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
       <NavBar />
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -41,3 +48,4 @@ const App = () => (
 );
 
 export default App;
+
