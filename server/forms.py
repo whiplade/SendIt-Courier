@@ -1,6 +1,6 @@
 # forms.py
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField,SelectField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField,SelectField, BooleanField,FloatField
 from wtforms.validators import DataRequired,EqualTo,Email
 
 class SignUpForm(FlaskForm):
@@ -16,3 +16,17 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class ParcelForm(FlaskForm):
+    weight = FloatField('Weight (kg)', validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
+    recipient_name = StringField('Recipient Name', validators=[DataRequired()])
+    recipient_phone_number = StringField('Recipient Phone Number', validators=[DataRequired()])
+    pickup_location = StringField('Pickup Location', validators=[DataRequired()])
+    destination = StringField('Destination', validators=[DataRequired()])
+    status = SelectField('Status', choices=[('Pending', 'Pending'), ('Shipped', 'Shipped'), ('In Transit', 'In Transit'), ('Delivered', 'Delivered')], default='Pending', validators=[DataRequired()])
+    present_location = StringField('Present Location', default='Warehouse', validators=[DataRequired()])
+
+class ChangeDestinationForm(FlaskForm):
+    destination = StringField('New Destination', validators=[DataRequired()])
+

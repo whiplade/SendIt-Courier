@@ -1,0 +1,12 @@
+
+
+
+@app.route('/')
+def home():
+    if current_user.is_authenticated:
+        return jsonify({'message': 'User is authenticated', 'redirect_url': url_for('dashboard')})
+    login_status = session.get('login_status', '')
+    logout_status = session.get('logout_status', '')
+    return jsonify({'message': 'Welcome to the home page', 'login_status': login_status, 'logout_status': logout_status})
+
+# ... (other routes and resources)

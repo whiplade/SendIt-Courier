@@ -7,7 +7,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://whiplade:EQO9vizVeJPWblgTzx3UcdLKRKDqkQ5j@dpg-cktmdvunfb1c73f5kk60-a.singapore-postgres.render.com/sendit_fvf8'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://whiplade:EQO9vizVeJPWblgTzx3UcdLKRKDqkQ5j@dpg-cktmdvunfb1c73f5kk60-a.singapore-postgres.render.com/sendit_fvf8'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key_here'

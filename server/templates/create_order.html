@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Create Parcel Order</h1>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.weight.label(class="form-label") }}
+            {{ form.weight(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.recipient_name.label(class="form-label") }}
+            {{ form.recipient_name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.recipient_phone_number.label(class="form-label") }}
+            {{ form.recipient_phone_number(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.pickup_location.label(class="form-label") }}
+            {{ form.pickup_location(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.destination.label(class="form-label") }}
+            {{ form.destination(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.status.label(class="form-label") }}
+            {{ form.status(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.present_location.label(class="form-label") }}
+            {{ form.present_location(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Create Parcel Order</button>
+    </form>
+
+{% endblock %}
+

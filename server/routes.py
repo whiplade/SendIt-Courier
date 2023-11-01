@@ -1,13 +1,13 @@
 from config import app, db, bcrypt, login_manager
-from models import User
-from forms import SignUpForm, LoginForm, LoginForm
-from flask import render_template, session, redirect, url_for, flash, request
+from models import User, Parcel
+from forms import SignUpForm, LoginForm, LoginForm,ParcelForm,ChangeDestinationForm
+from flask import render_template, session, redirect, url_for, flash, request, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(int(user_id)) 
 
 @app.route('/')
 def home():
@@ -62,13 +62,106 @@ def dashboard():
         return 'Welcome to the admin dashboard!'
     else:
         return 'Welcome to the user dashboard!'
-
+    
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('Logged out successfully!', 'info')
     return redirect(url_for('home'))
+
+# @app.route('/parcels', methods=['POST'])
+# @login_required
+# def create_parcel():
+#     data = request.get_json()
+#     name = data['name']
+
+#     parcel = Parcel(name=name, user_id=current_user.id)
+#     db.session.add(parcel)
+#     db.session.commit()
+#     return jsonify(message='Parcel created successfully'), 201
+
+# you can get the user in the current session without using JWT by using Flask-Login. 
+# When a user logs in and their session is established, you can access the current user 
+# using the current_user object provided by Flask-Login.
+    
+@app.route('/create_order', methods=['GET','POST'])
+@login_required
+def create_parcel_order():
+    # data = request.get_json()
+
+    # if data:
+    #     parcel = Parcel(
+    #         weight = data['weight'],
+    #         description = data['description'],
+    #         recipient_name = data['recipient_name'],
+    #         recipient_phone_number = data['recipient_phone_number'],
+    #         pickup_location = data['pickup_location'],
+    #         destination = data['destination'],
+    #         user_id = data['user_id'])
+
+    #     db.session.add(parcel)
+    #     db.session.commit()
+    #     return jsonify({'message': 'Parcel Order created successfully!'})  
+
+    form = ParcelForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            parcel = Parcel(
+                weight=form.weight.data,
+                description=form.description.data,
+                recipient_name=form.recipient_name.data,
+                recipient_phone_number=form.recipient_phone_number.data,
+                pickup_location=form.pickup_location.data,
+                destination=form.destination.data,
+                status=form.status.data,
+                user_id=current_user.user_id,
+                present_location='Warehouse'
+            )
+
+            db.session.add(parcel)
+            db.session.commit()
+            flash('Parcel order created successfully.', 'success')
+            
+    return render_template('create_order.html', form=form)
+
+@app.route('/user_parcels', methods=['GET'])
+@login_required
+def user_parcels():
+    all_parcels = Parcel.query.filter_by(user_id=current_user.user_id).all()
+    return render_template('user_parcels.html' , all_parcels=all_parcels)
+    
+@app.route('/change_destination/<int:parcel_id>', methods=['GET', 'POST'])
+@login_required
+def change_destination(parcel_id):
+
+    parcel= Parcel.query.get(parcel_id)
+
+    if parcel is None or parcel.user_id != current_user.user_id:
+        flash ('Parcel not found or you do not have sufficient permissions!')
+        return redirect(url_for('user_parcels'))
+
+    form = ChangeDestinationForm()
+
+    if form.validate_on_submit():
+        parcel.destination = form.destination.data
+       
+        db.session.commit()
+        flash("Destination changed successfully!",'success')
+        return redirect(url_for('user_parcels'))
+
+    return render_template('change_destination.html', form=form, parcel=parcel)
+
+@app.route('/cancel_order/<int:parcel_id>', methods=['GET','DELETE'])
+@login_required
+def cancel_order(parcel_id):
+    parcel_order = Parcel.query.get(parcel_id)
+    if parcel_order:
+        db.session.delete(parcel_order)
+        db.session.commit()
+        flash("Parcel Order deleted successfully!")
+        return redirect(url_for('user_parcels'))
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5555)
