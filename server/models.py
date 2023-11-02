@@ -1,5 +1,6 @@
-from config import db, bcrypt
+from config import db, bcrypt, app
 from datetime import datetime
+
 
 # Users table with its attributes
 class User(db.Model):
@@ -30,6 +31,7 @@ class User(db.Model):
     
     def is_anonymous(self):
         return False
+    
 
 # Parcels table with its attributes
 class Parcel(db.Model):
