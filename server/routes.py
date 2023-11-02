@@ -4,19 +4,33 @@ from forms import SignUpForm, LoginForm, LoginForm,ParcelForm,ChangeDestinationF
 from flask import render_template, session, redirect, url_for, flash, request, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
+from flask_wtf.csrf import generate_csrf
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id)) 
 
+
+@app.route('/generate-csrf', methods=['GET'])
+def gen_csrf():
+    token = generate_csrf()  # Use your preferred method to generate the CSRF token
+    return jsonify(ctoken= token)
+
+# @app.route('/')
+# def home():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('dashboard'))
+#     login_status = session.get('login_status', '')
+#     logout_status = session.get('logout_status', '')
+#     form = LoginForm()
+#     return render_template('login.html', login_status=login_status, logout_status=logout_status, form=form)
+
 @app.route('/')
 def home():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    login_status = session.get('login_status', '')
-    logout_status = session.get('logout_status', '')
-    form = LoginForm()
-    return render_template('login.html', login_status=login_status, logout_status=logout_status, form=form)
+        return jsonify(message = "You are already logged in!")
+    else:
+        return jsonify(message = "Welcome to SendIt!"), 200
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -34,26 +48,46 @@ def signup():
             return redirect(url_for('login'))
     return render_template('signup.html', title='Sign Up', form=form)
 
+# @app.route('/login', methods=['GET', 'POST'])
+# # @csrf.exempt
+# def login():
+#     data = request.get_json()
+#     form = LoginForm(data = data)
+#     # if current_user.is_authenticated:
+#     #     flash('You are already signed in.', 'info')
+#     #     return redirect(url_for('dashboard'))
+    
+#     if form.validate(): 
+#         username_or_email = form.username_or_email.data
+#         password = form.password.data
+#         user = User.query.filter((User.email == username_or_email) | (User.username == username_or_email)).first()
+
+#         if user and bcrypt.check_password_hash(user.password, password):
+#             login_user(user, remember=form.remember.data)
+#             # flash('Login successful!', 'success')
+#             return jsonify(message = "Log in successful"), 200
+#         else:
+#             return jsonify(message = 'Invalid credentials, please try again.'), 401
+        
+#     else:
+#         return jsonify({'error': 'Error while logging in!'}), 400
+
+#BO
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    # if current_user.is_authenticated:
-    #     flash('You are already signed in.', 'info')
-    #     return redirect(url_for('dashboard'))
-    
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate_on_submit():
         username_or_email = form.username_or_email.data
         password = form.password.data
         user = User.query.filter((User.email == username_or_email) | (User.username == username_or_email)).first()
 
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user, remember=form.remember.data)
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+            return jsonify({"success": True})
         else:
-            flash('Invalid email/username or password. Please try again.', 'danger')
+            return jsonify({"success": False, "message": "Invalid email/username or password. Please try again."})
 
-    return render_template('login.html', form=form)
+    return jsonify({"success": False, "message": "Testing."})
 
 @app.route('/dashboard')
 @login_required
