@@ -2,9 +2,9 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function (app) {
   app.use(
-    '/signup',  // Define the specific route to proxy to
+    '/signup',  
     createProxyMiddleware({
-      target: 'http://localhost:5555',  // Specify the URL of your Flask back-end
+      target: 'http://localhost:5555',  
       changeOrigin: true,
     })
   );
