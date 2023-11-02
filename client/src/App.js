@@ -6,7 +6,7 @@ import './App.css';
 import About from './components/Landing/About';
 import Pricing from './components/Landing/Pricing';
 import Login from './components/Landing/Login';
-import SignUp from './components/Landing/Signup';
+import SignUp from './components/Landing/SignUp';
 import Landing from './components/Landing/Landing';
 import User from './components/User/User';
 import Admin from './components/Admin/Admin';
