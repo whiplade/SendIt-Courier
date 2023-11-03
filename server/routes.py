@@ -1,4 +1,4 @@
-from config import app, db, bcrypt, login_manager
+from config import app, db, login_manager
 from models import User, Parcel
 from forms import SignUpForm, LoginForm, LoginForm,ParcelForm,ChangeDestinationForm
 from flask import render_template, session, redirect, url_for, flash, request, jsonify, make_response
@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -86,7 +86,7 @@ def login():
 	if not auth or not auth.get('email') or not auth.get('password'):
 		# returns 401 if any email or / and password is missing
 		return make_response(
-			'Could not verify',
+			'Could not verify!',
 			401,
 			{'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
 		)
@@ -98,7 +98,7 @@ def login():
 	if not user:
 		# returns 401 if user does not exist
 		return make_response(
-			'Could not verify',
+			'Could not verify!',
 			402,
 			{'WWW-Authenticate' : 'Basic realm ="User does not exist !!"'}
 		)
@@ -106,14 +106,13 @@ def login():
 	if check_password_hash(user.password, auth.get('password')):
 		# generates the JWT Token
 		token = jwt.encode({
-			'user_id': user.user_id,
-			'exp' : datetime.utcnow() + timedelta(minutes = 30)
+			'user_id': user.user_id
 		}, app.config['SECRET_KEY'])
 
 		return make_response(jsonify({'token' : token}), 201)
 	# returns 403 if password is wrong
 	return make_response(
-		'Could not verify',
+		'Invalid credentials!',
 		403,
 		{'WWW-Authenticate' : 'Basic realm ="Wrong Password !!"'}
 	)
@@ -133,53 +132,91 @@ def login():
 #     else:
 #         return 'User not found', 404
 
-    
-@app.route('/logout')
-@jwt_required()
+@app.route("/logout", methods=["POST"])
 def logout():
-    logout_user()
-    flash('Logged out successfully!', 'info')
-    return redirect(url_for('home'))
+    response = jsonify({'message': 'Logged out successfully'})
+    unset_jwt_cookies(response)
+    return response
 
     
-@app.route('/create_order', methods=['GET','POST'])
-def create_parcel_order():
-    # data = request.get_json()
+# @app.route('/create_order', methods=['GET','POST'])
+# def create_parcel_order():
+#     data = request.get_json()
 
-    # if data:
-    #     parcel = Parcel(
-    #         weight = data['weight'],
-    #         description = data['description'],
-    #         recipient_name = data['recipient_name'],
-    #         recipient_phone_number = data['recipient_phone_number'],
-    #         pickup_location = data['pickup_location'],
-    #         destination = data['destination'],
-    #         user_id = data['user_id'])
+#     if data:
+#         parcel = Parcel(
+#             weight = data['weight'],
+#             description = data['description'],
+#             recipient_name = data['recipient_name'],
+#             recipient_phone_number = data['recipient_phone_number'],
+#             pickup_location = data['pickup_location'],
+#             destination = data['destination'],
+#             user_id = data['user_id'])
 
-    #     db.session.add(parcel)
-    #     db.session.commit()
-    #     return jsonify({'message': 'Parcel Order created successfully!'})  
+#         db.session.add(parcel)
+#         db.session.commit()
+#         return jsonify({'message': 'Parcel Order created successfully!'})  
 
-    form = ParcelForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
+@app.route('/create_order', methods=['POST'])
+# @jwt_required()
+def create_order():
+    
+    # user_id = get_jwt_identity()
+
+    # user = User.query.get(user_id)
+
+    if current_user.is_authenticated:
+        
+        if request.method == 'POST':
+            data = request.get_json()
+            weight = data.get('weight')
+            description = data.get('description')
+            recipient_name = data.get('recipient_name')
+            recipient_phone_number = data.get('recipient_phone_number')
+            pickup_location = data.get('pickup_location')
+            destination = data.get('destination')
+
+            
             parcel = Parcel(
-                weight=form.weight.data,
-                description=form.description.data,
-                recipient_name=form.recipient_name.data,
-                recipient_phone_number=form.recipient_phone_number.data,
-                pickup_location=form.pickup_location.data,
-                destination=form.destination.data,
-                status=form.status.data,
-                user_id=current_user.user_id,
+                weight=weight,
+                description=description,
+                recipient_name=recipient_name,
+                recipient_phone_number=recipient_phone_number,
+                pickup_location=pickup_location,
+                destination=destination,
+                status='Pending',
+                user_id=current_user.id,  
                 present_location='Warehouse'
             )
 
             db.session.add(parcel)
             db.session.commit()
-            flash('Parcel order created successfully.', 'success')
+
+            return jsonify({"message":"Parcel order created successfully"}), 201
+
+    return jsonify({"message":"User not found or unauthorized"}), 401
+
+
+    # form = ParcelForm()
+    # if request.method == 'POST':
+    #     if form.validate_on_submit():
+    #         parcel = Parcel(
+    #             weight=form.weight.data,
+    #             description=form.description.data,
+    #             recipient_name=form.recipient_name.data,
+    #             recipient_phone_number=form.recipient_phone_number.data,
+    #             pickup_location=form.pickup_location.data,
+    #             destination=form.destination.data,
+    #             status=form.status.data,
+    #             user_id=current_user.user_id,
+    #             present_location='Warehouse'
+    #         )
+
+    #         db.session.add(parcel)
+    #         db.session.commit()
+    #         flash('Parcel order created successfully.', 'success')
             
-    return render_template('create_order.html', form=form)
+    # return render_template('create_order.html', form=form)
 
 @app.route('/user_parcels', methods=['GET'])
 def user_parcels():
