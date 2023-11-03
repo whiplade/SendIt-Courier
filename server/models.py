@@ -1,5 +1,6 @@
-from config import db, bcrypt
+from config import db, bcrypt, app
 from datetime import datetime
+
 
 # Users table with its attributes
 class User(db.Model):
@@ -30,6 +31,7 @@ class User(db.Model):
     
     def is_anonymous(self):
         return False
+    
 
 # Parcels table with its attributes
 class Parcel(db.Model):
@@ -48,6 +50,8 @@ class Parcel(db.Model):
     present_location = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)  
+
+    
    
     
     

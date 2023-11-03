@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>My Orders</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Parcel ID</th>
+                <th>Weight (kg)</th>
+                <th>Description</th>
+                <th>Recipient Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for parcel in all_parcels %}
+                <tr>
+                    <td>{{ parcel.parcel_id }}</td>
+                    <td>{{ parcel.weight }}</td>
+                    <td>{{ parcel.description }}</td>
+                    <td>{{ parcel.recipient_name }}</td>
+                    <td>{{ parcel.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+    
+
+    
+{% endblock %}
