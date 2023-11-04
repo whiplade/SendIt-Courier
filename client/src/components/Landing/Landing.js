@@ -1,8 +1,10 @@
 import React from 'react'
-
+import NavBar from '../../NavBar'
 export default function Landing() {
+
     return (
       <div>
+        <NavBar />
         <div className='landing-container'>
           <div className='landing-text'><h1 className='landingheading'>Fastest Deliveries And Easy PickUp</h1></div>
           <div className='landing-image'><img src='https://media.istockphoto.com/id/1325240511/vector/young-delivery-man-with-box-courier-with-a-box-in-his-hands-vector-flat-cartoon-illustration.jpg?s=612x612&w=0&k=20&c=krUS8Yv2PZ51JQPIaEYBLKrIx90MNTrA5Pl4faxoQyM=' alt='alt' className='img1landing'/></div>

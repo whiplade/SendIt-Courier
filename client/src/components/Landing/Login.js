@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NavBar from '../../NavBar'
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -13,6 +14,7 @@ export default function Login() {
 
   return (
     <div>
+      <NavBar />
       <div className='compheading'>Login</div>
       <form className="form" onSubmit={handleSubmit}>
         <div className="flex-column">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import NavBar from '../../NavBar'
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -57,6 +58,7 @@ export default function SignUp() {
 
   return (
     <div>
+      <NavBar />
       <div className='compheading'>Signup</div>
       <button onClick={handleGetRequest}>Fetch Data</button>
       <form className="form" onSubmit={handleSubmit}>

@@ -1,8 +1,10 @@
 import React from 'react'
+import NavBar from '../../NavBar'
 
 export default function Pricing() {
   return (
     <>
+    <NavBar />
     <div className='compheading'>Pricing</div>
     <div className="pricingcard">
       <div className="pricing-card">
