@@ -208,7 +208,7 @@ export default function OrderForm() {
               </div>
               <img
     className="max-h-[150px] w-[100%] object-cover rounded-xl"
-    src="https://images.pexels.com/photos/208589/pexels-photo-208589.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+    src="https://images.pexels.com/photos/4440788/pexels-photo-4440788.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                 alt="/"
               />
             </div>
