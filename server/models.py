@@ -51,7 +51,19 @@ class Parcel(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False) 
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)  
 
-    
-   
-    
+    def serialize(self):
+        return{
+            'parcel_id': self.parcel_id,
+            'weight': self.weight,
+            'description': self.description,
+            'recipient_name': self.recipient_name,
+            'recipient_phone_number': self.recipient_phone_number,
+            'pickup_location': self.pickup_location,
+            'destination': self.destination,
+            'status': self.status,
+            'user_id': self.user_id,
+            'present_location': self.present_location,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }
     
