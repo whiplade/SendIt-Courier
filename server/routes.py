@@ -78,44 +78,86 @@ def signup():
     
 
 # updated route for logging user in
-@app.route('/login', methods =['POST'])
+# @app.route('/login', methods =['POST'])
+# def login():
+# 	# creates dictionary of form data
+# 	auth = request.form
+
+# 	if not auth or not auth.get('email') or not auth.get('password'):
+# 		# returns 401 if any email or / and password is missing
+# 		return make_response(
+# 			'Could not verify!',
+# 			401,
+# 			{'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
+# 		)
+
+# 	user = User.query\
+# 		.filter_by(email = auth.get('email'))\
+# 		.first()
+
+# 	if not user:
+# 		# returns 401 if user does not exist
+# 		return make_response(
+# 			'Could not verify!',
+# 			402,
+# 			{'WWW-Authenticate' : 'Basic realm ="User does not exist !!"'}
+# 		)
+
+# 	if check_password_hash(user.password, auth.get('password')):
+# 		# generates the JWT Token
+# 		token = jwt.encode({
+# 			'user_id': user.user_id
+# 		}, app.config['SECRET_KEY'])
+
+# 		return make_response(jsonify({'token' : token}), 201)
+# 	# returns 403 if password is wrong
+# 	return make_response(
+# 		'Invalid credentials!',
+# 		403,
+# 		{'WWW-Authenticate' : 'Basic realm ="Wrong Password !!"'}
+# 	)
+
+	# if user.password == password:  # Replace with actual password validation logic
+    #     access_token = create_access_token(identity=user.id)
+    #     return jsonify({'access_token': access_token}), 201
+    # else:
+    #     return make_response(jsonify({'message': 'Wrong password.'}), 403)
+
+	# Login route
+# @app.route('/login', methods=['POST'])
+# def login():
+#     data = request.get_json()
+#     username = data.get('username')
+#     password = data.get('password')
+
+#     # Check if the provided username and password are valid
+#     if username in users and users[username]['password'] == password:
+#         # Create an access token for the user
+#         access_token = create_access_token(identity=username)
+#         return jsonify(access_token=access_token), 200
+#     else:
+#         return jsonify(message='Invalid username or password'), 401
+
+@app.route('/login', methods=['POST'])
 def login():
-	# creates dictionary of form data
-	auth = request.form
+    if not request.is_json:
+        return jsonify({'message': 'Missing JSON in request'}), 400
 
-	if not auth or not auth.get('email') or not auth.get('password'):
-		# returns 401 if any email or / and password is missing
-		return make_response(
-			'Could not verify!',
-			401,
-			{'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
-		)
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-	user = User.query\
-		.filter_by(email = auth.get('email'))\
-		.first()
+    if not email or not password:
+        return jsonify({'message': 'Missing email or password'}), 400
 
-	if not user:
-		# returns 401 if user does not exist
-		return make_response(
-			'Could not verify!',
-			402,
-			{'WWW-Authenticate' : 'Basic realm ="User does not exist !!"'}
-		)
+    user = User.query.filter_by(email=email).first()
 
-	if check_password_hash(user.password, auth.get('password')):
-		# generates the JWT Token
-		token = jwt.encode({
-			'user_id': user.user_id
-		}, app.config['SECRET_KEY'])
+    if not user or not check_password_hash(user.password, password):
+        return jsonify({'message': 'Invalid credentials'}), 401
 
-		return make_response(jsonify({'token' : token}), 201)
-	# returns 403 if password is wrong
-	return make_response(
-		'Invalid credentials!',
-		403,
-		{'WWW-Authenticate' : 'Basic realm ="Wrong Password !!"'}
-	)
+    access_token = create_access_token(identity=user.user_id)
+    return jsonify({'message': 'Login successful', 'access_token': access_token}), 200
+	
 
 
 # @app.route('/dashboard')
@@ -138,119 +180,135 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
-    
-# @app.route('/create_order', methods=['GET','POST'])
-# def create_parcel_order():
-#     data = request.get_json()
-
-#     if data:
-#         parcel = Parcel(
-#             weight = data['weight'],
-#             description = data['description'],
-#             recipient_name = data['recipient_name'],
-#             recipient_phone_number = data['recipient_phone_number'],
-#             pickup_location = data['pickup_location'],
-#             destination = data['destination'],
-#             user_id = data['user_id'])
-
-#         db.session.add(parcel)
-#         db.session.commit()
-#         return jsonify({'message': 'Parcel Order created successfully!'})  
 
 @app.route('/create_order', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def create_order():
-    
-    # user_id = get_jwt_identity()
+    user_id = get_jwt_identity()
 
-    # user = User.query.get(user_id)
-
-    if current_user.is_authenticated:
+    if user_id:
+        data = request.get_json()
+        weight = data.get('weight')
+        description = data.get('description')
+        recipient_name = data.get('recipient_name')
+        recipient_phone_number = data.get('recipient_phone_number')
+        pickup_location = data.get('pickup_location')
+        destination = data.get('destination')
         
-        if request.method == 'POST':
-            data = request.get_json()
-            weight = data.get('weight')
-            description = data.get('description')
-            recipient_name = data.get('recipient_name')
-            recipient_phone_number = data.get('recipient_phone_number')
-            pickup_location = data.get('pickup_location')
-            destination = data.get('destination')
 
-            
-            parcel = Parcel(
-                weight=weight,
-                description=description,
-                recipient_name=recipient_name,
-                recipient_phone_number=recipient_phone_number,
-                pickup_location=pickup_location,
-                destination=destination,
-                status='Pending',
-                user_id=current_user.id,  
-                present_location='Warehouse'
-            )
+    
+        new_parcel = Parcel(
+            weight=weight,
+            description=description,
+            recipient_name=recipient_name,
+            recipient_phone_number=recipient_phone_number,
+            pickup_location=pickup_location,
+            destination=destination,
+            status='Pending',
+            user_id=user_id,  
+            present_location='Warehouse'
+        )
 
-            db.session.add(parcel)
-            db.session.commit()
+        db.session.add(new_parcel)
+        db.session.commit()
 
-            return jsonify({"message":"Parcel order created successfully"}), 201
+        return jsonify({"message": "Parcel order created successfully"}), 201
+    else:
+        return jsonify({"message": "User not found or unauthorized"}), 401
 
-    return jsonify({"message":"User not found or unauthorized"}), 401
-
-
-    # form = ParcelForm()
-    # if request.method == 'POST':
-    #     if form.validate_on_submit():
-    #         parcel = Parcel(
-    #             weight=form.weight.data,
-    #             description=form.description.data,
-    #             recipient_name=form.recipient_name.data,
-    #             recipient_phone_number=form.recipient_phone_number.data,
-    #             pickup_location=form.pickup_location.data,
-    #             destination=form.destination.data,
-    #             status=form.status.data,
-    #             user_id=current_user.user_id,
-    #             present_location='Warehouse'
-    #         )
-
-    #         db.session.add(parcel)
-    #         db.session.commit()
-    #         flash('Parcel order created successfully.', 'success')
-            
-    # return render_template('create_order.html', form=form)
 
 @app.route('/user_parcels', methods=['GET'])
+@jwt_required()
 def user_parcels():
-    all_parcels = Parcel.query.filter_by(user_id=current_user.user_id).all()
-    return render_template('user_parcels.html' , all_parcels=all_parcels)
+		user_id = get_jwt_identity()
+		all_parcels = Parcel.query.filter_by(user_id=user_id).all()
+		parcels_list = [parcel.serialize() for parcel in all_parcels]
+		return jsonify(parcels_list)
     
-@app.route('/change_destination/<int:parcel_id>', methods=['GET', 'POST'])
+
+@app.route('/change_destination/<int:parcel_id>', methods=['GET', 'PATCH'])
+@jwt_required()
 def change_destination(parcel_id):
+	user_id = get_jwt_identity()
+	parcel = Parcel.query.filter_by(parcel_id=parcel_id).first()
+      
+	if parcel is None:
+			return jsonify({'message': 'Parcel not found'}), 404
 
-    parcel= Parcel.query.get(parcel_id)
+	if parcel.user_id != user_id:
+			return jsonify({'message': 'You do not have sufficient permissions'}), 401
 
-    if parcel is None or parcel.user_id != current_user.user_id:
-        flash ('Parcel not found or you do not have sufficient permissions!')
-        return redirect(url_for('user_parcels'))
+	data=request.get_json()
+	new_destination= data.get('New destination')
 
-    form = ChangeDestinationForm()
+	parcel.destination = new_destination
 
-    if form.validate_on_submit():
-        parcel.destination = form.destination.data
-       
-        db.session.commit()
-        flash("Destination changed successfully!",'success')
-        return redirect(url_for('user_parcels'))
+	db.session.commit()
 
-    return render_template('change_destination.html', form=form, parcel=parcel)
+	return jsonify({'message':"Destination updated successfully"}), 200
+
+
 
 @app.route('/cancel_order/<int:parcel_id>', methods=['GET','DELETE'])
+@jwt_required()
 def cancel_order(parcel_id):
     parcel_order = Parcel.query.get(parcel_id)
     if parcel_order:
         db.session.delete(parcel_order)
         db.session.commit()
-        flash("Parcel Order deleted successfully!")
-        return redirect(url_for('user_parcels'))
+        return jsonify({"message":"Parcel Order deleted successfully!"}), 200
+
+#ADMIN ROUTES
+
+@app.route('/change_status/<int:parcel_id>', methods=['GET', 'PATCH'])
+@jwt_required()
+def change_status(parcel_id):
+
+	user = User.query.get(get_jwt_identity())
+	
+	if user.role == 'admin':
+		parcel = Parcel.query.filter_by(parcel_id=parcel_id).first()
+      
+		if parcel is None:
+				return jsonify({'message': 'Parcel not found'}), 404
+
+	
+		data=request.get_json()
+		new_status= data.get('status')
+
+		parcel.status = new_status
+
+		db.session.commit()
+
+		return jsonify({'message':"Status updated!"}), 200
+	
+	else:
+		return jsonify({"message":'Unauthorized'}), 401
+
+@app.route('/change_location/<int:parcel_id>', methods=['GET', 'PATCH'])
+@jwt_required()
+def change_present_location(parcel_id):
+	user = User.query.get(get_jwt_identity())
+	
+	if user.role == 'admin':
+		parcel = Parcel.query.filter_by(parcel_id=parcel_id).first()
+      
+		if parcel is None:
+				return jsonify({'message': 'Parcel not found'}), 404
+
+	
+		data=request.get_json()
+		new_present_location= data.get('present_location')
+
+		parcel.present_location = new_present_location
+
+		db.session.commit()
+
+		return jsonify({'message':"Location updated!"}), 200
+	
+	else:
+		return jsonify({"message":'Unauthorized'}), 401
+
 
 
 if __name__ == '__main__':
