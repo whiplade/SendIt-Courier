@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import NavBar from '../../NavBar'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate(); 
 
+  const useLogin = () => {
+    navigate('/user/home');
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Add your Firebase authentication code here
     console.log(`Username: ${username}, Password: ${password}, Remember me: ${rememberMe}`);
   };
 
@@ -39,7 +44,7 @@ export default function Login() {
           <span className="span">Forgot password?</span>
         </div>
 
-        <button className="button-submit">Log In</button>
+        <button className="button-submit"  onClick={useLogin} >Log In</button>
 
         <p className="p">Don't have an account? <span className="span">Sign In</span></p>
         <p className="p line">Or With</p>

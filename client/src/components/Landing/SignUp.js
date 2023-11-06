@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 import NavBar from '../../NavBar'
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -11,10 +12,16 @@ export default function SignUp() {
     role: 'user',
   });
 
+  const navigate = useNavigate(); 
+
+  const useSignup = () => {
+    navigate('/user/home');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Create a FormData object and append the form fields to it
+
     const formDataToSend = new FormData();
     formDataToSend.append('username', formData.username);
     formDataToSend.append('email', formData.email);
@@ -25,26 +32,25 @@ export default function SignUp() {
     try {
       const response = await axios.post('/signup', formDataToSend, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Set the content type to form data
+          'Content-Type': 'multipart/form-data', 
         },
         
       });
 
-      console.log(response.data); // Log the response data
-      // Handle the response, e.g., show a success message or redirect to the dashboard.
+      console.log(response.data); 
+    
     } catch (error) {
-      console.error('Error:', error); // Log the error
-      // Handle errors, e.g., display an error message to the user.
+      console.error('Error:', error); 
+    
     }
   };
   const handleGetRequest = async () => {
     try {
-      const response = await axios.get('/signup');  // Replace '/api/endpoint' with your actual endpoint
-      console.log(response.data); // Log the response data
-      // Handle the response, e.g., update your component's state with the received data.
+      const response = await axios.get('/signup'); 
+      console.log(response.data); 
+
     } catch (error) {
-      console.error('Error:', error); // Log the error
-      // Handle errors, e.g., display an error message to the user.
+      console.error('Error:', error);
     }
   };
   
@@ -125,7 +131,7 @@ export default function SignUp() {
             <option value="admin">Admin</option>
           </select>
         </div>
-        <button className="button-submit" type="submit">Sign Up</button>
+        <button className="button-submit" onClick={useSignup}  type="submit">Sign Up</button>
       </form>
     </div>
   );

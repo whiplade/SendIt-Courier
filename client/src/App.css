@@ -497,18 +497,20 @@ input[type="submit"] {
   margin-top: 150px;
 }
 
-
-.subscribe-container {
+/* .subscribe-container {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: 50px;
-}
+} */
 
+.deliverycomp{
+  display: flex;
+}
 .subscribe {
   position: relative;
-  height: 140px;
-  margin-left: 500px;
+  height: 400px;
+  margin-left: 400px;
   margin-top: 150px;
   width: 340px;
   padding: 20px;
@@ -516,10 +518,12 @@ input[type="submit"] {
   border-radius: 4px;
   color: #333;
   box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.4);
+}
+
+.subscribe form {
   display: flex;
   flex-direction: column; 
 }
-
 
 .subscribe:after {
   position: absolute;
@@ -530,9 +534,7 @@ input[type="submit"] {
   height: 0;
   border-left: 0px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #9A8174;
 }
-
 
 .subscribe p {
   text-align: center;
@@ -543,14 +545,13 @@ input[type="submit"] {
 }
 
 .subscribe input {
-  position: absolute;
-  bottom: 30px;
   border: none;
   border-bottom: 1px solid #d4d4d4;
   padding: 10px;
-  width: 82%;
+  width: 100%; 
   background: transparent;
   transition: all .25s ease;
+  margin-bottom: 20px; 
 }
 
 .subscribe input:focus {
@@ -559,12 +560,11 @@ input[type="submit"] {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', 'sans-serif';
 }
 
-
 .subscribe .submit-btn {
-  position: absolute;
   border-radius: 30px;
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
+  border-bottom: 10px;
   background-color: #9A8174;
   color: #FFF;
   padding: 12px 25px;
@@ -572,8 +572,6 @@ input[type="submit"] {
   font-size: 12px;
   font-weight: bold;
   letter-spacing: 5px;
-  right: -10px;
-  bottom: -20px;
   cursor: pointer;
   transition: all .25s ease;
   box-shadow: -5px 6px 20px 0px rgba(26, 26, 26, 0.4);
@@ -598,8 +596,8 @@ input[type="submit"] {
   max-width: 312px;
   justify-content: center;
   align-items: center;
-  margin-left: 500px;
-  margin-top: 50px;
+  margin-left: 100px;
+  margin-top: 150px;
   padding: 36px 32px;
   background: #fff;
   border-radius: 10px;
@@ -709,4 +707,18 @@ input[type="submit"] {
   color: #9A8174;
   margin-top: 2px;
   font-family: Trebuchet MS, sans-serif;
+}
+.submit-checkout{
+  border-radius: 30px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom: 10px;
+  background-color: #9A8174;
+  color: #FFF;
+  padding: 12px 25px;
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 5px;
+  cursor: pointer;
+  transition: all .25s ease;
 }
