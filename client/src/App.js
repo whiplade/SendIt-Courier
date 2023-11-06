@@ -3,11 +3,15 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 
 // Import your components
-import About from './components/Landing/About';
+import About from './Pages/About';
 import Pricing from './components/Landing/Pricing';
 import Login from './components/Landing/Login';
-import SignUp from './components/Landing/Signup';
-import Landing from './components/Landing/Landing';
+import SignUp from './components/Landing/SignUp';
+import Landing from './Pages/Landing';
+import Map from './components/Landing/Map';
+import CreateOrder from './Pages/CreateOrder';
+import Orders from './Pages/Orders';
+
 const NavBar = () => (
  <div className='Navcomponent'>
   <img src='https://cdn-icons-png.flaticon.com/128/75/75784.png?uid=R122397876&track=ais' alt='alt' className='nav-icon' />
@@ -19,7 +23,10 @@ const NavBar = () => (
       <Link to="/about" className="nav-link">About</Link>
       <Link to="/pricing" className="nav-link">Pricing</Link>
       <Link to="/login" className="nav-link">Login</Link>
-      <Link to="/signin" className="nav-link">SignUp</Link>
+      <Link to="/signup" className="nav-link">SignUp</Link>
+      
+
+
     </div>
   </div>
  </div>
@@ -34,7 +41,10 @@ const App = () => (
         <Route path="/about" element={<About />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signin" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/map" element={<Map />} />
+        <Route path="/CreateOrder" element={<CreateOrder />} />
+        <Route path="/Orders" element={<Orders />} />
       </Routes>
     </div>
   </Router>
