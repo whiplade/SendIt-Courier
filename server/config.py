@@ -4,7 +4,7 @@ from flask_restful import Api
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 # from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager
+# from flask_login import LoginManager
 from flask_jwt_extended import JWTManager, jwt_required
 # import secrets
 
@@ -27,7 +27,7 @@ db.init_app(app)
 
 
 bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
+# login_manager = LoginManager(app)
 # login_manager.login_view = 'login'
 
 # password = "user_password"
