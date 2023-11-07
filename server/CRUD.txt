@@ -1,0 +1,7 @@
+DONE - Users can create an account and log in.
+DONE - Users can create a parcel delivery order.
+DONE - Users can see the details of a delivery order.
+DONE - Users can change the destination of a parcel delivery order.
+DONE - Users can cancel a parcel delivery order.
+DONE - Admin can change the status of a parcel delivery order.
+DONE - Admin can change present location of a parcel delivery order.
