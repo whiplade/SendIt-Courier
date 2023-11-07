@@ -1,16 +1,16 @@
-from config import app, db, login_manager
+from config import app, db
 from models import User, Parcel
 from flask import render_template, session, redirect, url_for, flash, request, jsonify, make_response
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+# from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id)) 
+# @login_manager.user_loader
+# def load_user(user_id):
+#     return User.query.get(int(user_id)) 
 
 
 @app.route('/')
@@ -307,6 +307,21 @@ def change_present_location(parcel_id):
 	
 	else:
 		return jsonify({"message":'Unauthorized'}), 401
+	
+
+@app.route('/admin/all_parcels',methods=['GET'])
+@jwt_required()
+def get_all_parcels():
+	user = User.query.get(get_jwt_identity())
+	
+	if user.role == 'admin':
+		all_parcels = Parcel.query.all()
+		parcels_list = [parcel.serialize() for parcel in all_parcels]
+		print(parcels_list)
+		return jsonify(parcels_list)
+		
+
+	
 
 
 
