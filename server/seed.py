@@ -2,67 +2,52 @@ from config import db, app
 from datetime import datetime
 from faker import Faker
 from models import User, Parcel
+import random
 
 fake = Faker()
 
-def create_fake_user():
+descriptions = ["Fragile", "Do not shake", "This side up", "Do not stack", "Sensitive equipment", "Perishable", "Keep dry", "Keep away from heat", "Hazardous material", "Heavy", "Top load only"]
+pickup_locations = ["Thika", "Nakuru", "Mombasa", "Kisumu", "Kitale", "Nairobi", "Bungoma", "Bomet", "Nanyuki", "Nyeri", "Moyale", "Marsabit", "Nanyuki", "Meru", "Embu", "Malindi", "Lamu", "Karatina"]
+destinations = ["Voi", "Garissa", "Isiolo", "Wajir", "Kapenguria", "Homabay", "Kiambu", "Migori", "Siaya", "Ruiru", "Juja", "Kikuyu", "Machakos", "Nyahururu", "Webuye", "Chogoria", "Kajiado"]
 
-    username = fake.user_name()
-    email = fake.email()
-    password = fake.password()
-    role = fake.random_element(elements=('admin', 'user'))  
-    user = User(username=username, email=email, password=password, role=role)
-    return user
+def seed_database():
+    with app.app_context():
+        # Clear existing data
+        db.drop_all()
+        db.create_all()
 
+        # Seed users ans super admin
+        super_admin = User(username="Nathan", email="nathan@admin.com", password="One2Three4", role="admin")
+        db.session.add(super_admin)
 
-def create_fake_parcel(user_id):
-    weight = fake.random_int(min=1, max=50)
-    description = fake.sentence()
-    recipient_name = fake.name()
-    recipient_phone_number = fake.phone_number()
-    pickup_location = fake.address()
-    destination = fake.address()
-    status = fake.random_element(elements=('pending', 'in transit', 'delivered'))
-    present_location = fake.address()
-    created_at = datetime.utcnow()
-    updated_at = datetime.utcnow()
-    
-    parcel = Parcel(
-        weight=weight,
-        description=description,
-        recipient_name=recipient_name,
-        recipient_phone_number=recipient_phone_number,
-        pickup_location=pickup_location,
-        destination=destination,
-        status=status,
-        user_id=user_id,
-        present_location=present_location,
-        created_at=created_at,
-        updated_at=updated_at
-    )
-    return parcel
+        for _ in range(10):
+            user = User(username=fake.user_name(), email=fake.email(), password=fake.password(), role="user")
+            db.session.add(user)
 
-
-app.app_context().push()
-
-with app.app_context():
-
-    db.drop_all()
-    db.create_all()
-
-
-    for _ in range(10):  
-        user = create_fake_user()
-        db.session.add(user)
-
-    db.session.commit()
-
-    users = User.query.all()
-    for user in users:
-        for _ in range(3):  
-            parcel = create_fake_parcel(user.user_id)
+        # Seed parcels
+        for _ in range(18):
+            description = random.choice(descriptions)
+            pickup_location = random.choice(pickup_locations)
+            destination = random.choice(destinations)
+            
+            parcel = Parcel(
+                weight=fake.random_int(min=1, max=50),
+                description=description,
+                recipient_name=fake.name(),
+                recipient_phone_number=fake.phone_number(),
+                pickup_location=pickup_location,
+                destination=destination,
+                status="Pending",
+                user_id=fake.random_int(min=1, max=10),
+                present_location="Warehouse",
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+            )
             db.session.add(parcel)
 
-    db.session.commit()
+        # Commit the changes to the database
+        db.session.commit()
 
-print("Database has been seeded successfully!")
+if __name__ == '__main__':
+    seed_database()
+    print("Database seeded successfully!")
