@@ -1,6 +1,5 @@
 from config import app, db, login_manager
 from models import User, Parcel
-from forms import SignUpForm, LoginForm, LoginForm,ParcelForm,ChangeDestinationForm
 from flask import render_template, session, redirect, url_for, flash, request, jsonify, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
