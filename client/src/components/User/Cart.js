@@ -21,7 +21,7 @@ const cartData = [
 
 export default function Cart() {
   const navigate = useNavigate(); 
-  
+
   const useOrder = () => {
     navigate('/user/order');
   };

@@ -2,6 +2,7 @@ import React from 'react';
 import NavUser from './NavUser';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import Map from './Maps';
 
 
 function Delivery() {
@@ -77,7 +78,7 @@ function Delivery() {
           </div>
           <small className="current-range">
             Current Range:
-            <div>$<span id="third">340</span></div>
+            <div>$<span id="third">3$ per Kg</span></div>
           </small>
           <div data-range="#third" data-value-1="#second" data-value-0="#first" className="slider">
             <label className="label-min-value">1</label>
@@ -85,8 +86,10 @@ function Delivery() {
           </div>
           <div>
             <button className="cartbutton" onClick={useCheckout}>CHECKOUT</button>
+            <Map/>
           </div>
         </div>
+        
       </div>
     </div>
     </div>
