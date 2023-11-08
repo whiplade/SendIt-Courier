@@ -24,12 +24,16 @@ export default function NavBar({ isLoggedIn, handleLogout }) {
           <Link to="/pricing" className="nav-link">
             Pricing
           </Link>
+          <Link to="/createorders" className="nav-link">
+            Create Orders
+          </Link>
+          <Link to="/allorders" className="nav-link">
+            All Orders
+          </Link>
           {isLoggedIn ? (
-            <>
-              <button onClick={handleLogout} className="nav-link">
-                Logout
-              </button>
-            </>
+            <button onClick={handleLogout} className="nav-link">
+              Logout
+            </button>
           ) : (
             <>
               <Link to="/login" className="nav-link">

@@ -7,7 +7,7 @@ function Login() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
     rememberMe: false, 
   });
@@ -15,12 +15,10 @@ function Login() {
   const [errors, setErrors] = useState({});
 
   function handleInputChange(event) {
-    const { name, value, type, checked } = event.target;
-    const inputValue = type === "checkbox" ? checked : value;
-
+    const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: inputValue,
+      [name]: value,
     }));
   }
 
@@ -30,6 +28,7 @@ function Login() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        
       },
       body: JSON.stringify(formData), 
     })
@@ -43,11 +42,14 @@ function Login() {
             showConfirmButton: false,
             timer: 1500,
           });
+          if(!data.errors) {
+            localStorage.setItem("access_token", data.access_token)
+          }
           setTimeout(() => {
             if (data.user && data.user.role === "admin") {
               navigate("/AdminDashboard");
             } else {
-              navigate("/CreateOrder");
+              navigate("/");
             }
           }, 1500);
         } else {
@@ -69,20 +71,20 @@ function Login() {
               </div>
               <form onSubmit={login} className="space-y-3">
                 <div>
-                  <label
-                    htmlFor="username"
+                <label
+                    htmlFor="email"  
                     className="block mb-2 text-sm font-medium text-gray-900"
                   >
-                    Username
+                    Email
                   </label>
                   <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    value={formData.username}
+                    type="email"  
+                    name="email"
+                    id="email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    placeholder="username"
+                    placeholder="Email"
                     required
                   />
                   {errors.username && (

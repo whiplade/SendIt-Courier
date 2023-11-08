@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
 import {
   GoogleMap,
-  MarkerF,
+  Marker,
   useJsApiLoader,
   Autocomplete,
   DirectionsRenderer,
@@ -29,13 +29,14 @@ export default function OrderForm() {
   const [duration, setDuration] = useState("");
 
   const [formData, setFormData] = useState({
-    parcel_name: "",
     weight: null,
-    price: "",
+    description: "",
+    recipient_name: "",
+    recipient_phone_number: "",
     pickup_location: "",
     destination: "",
-    user_id: 0,
-    country: "",
+    status:"pending",
+    present_location:"warehouse"
   });
 
   const [errors, setErrors] = useState({});
@@ -100,18 +101,24 @@ export default function OrderForm() {
 
     const payload = {
       weight: formData.weight,
-      description: formData.parcel_name, 
-      recipient_name: "", 
-      recipient_phone_number: "", 
+      description: formData.description,  
+      recipient_name: formData.recipient_name,
+      recipient_phone_number: formData.recipient_phone_number,
       pickup_location: formData.pickup_location,
       destination: formData.destination,
+      status: formData.status,
+      present_location: formData.present_location
     };
+    const access_token = localStorage.getItem("access_token");
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${access_token}`,
+    }
 
     fetch("http://127.0.0.1:5555/create_order", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: headers,
+
       body: JSON.stringify(payload),
     })
       .then((res) => res.json())
@@ -202,15 +209,11 @@ export default function OrderForm() {
               {/* Overlay */}
               <div className="absolute w-full h-full bg-black/50 rounded-xl text-white">
                 <p className="font-bold text-2xl px-2 pt-4">
-                  Ensuring Your Convenience!
+                  {/* Ensuring Your Convenience! */}
                 </p>
                 <p className="px-2">Deliveries Wherever! Whenever!</p>
               </div>
-              <img
-    className="max-h-[150px] w-[100%] object-cover rounded-xl"
-    src="https://images.pexels.com/photos/4440788/pexels-photo-4440788.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                alt="/"
-              />
+              
             </div>
           </div>
 
@@ -221,24 +224,24 @@ export default function OrderForm() {
                   <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="parcel_name"
+                        htmlFor="parcel_id"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Parcel name
                       </label>
                       <input
                         type="text"
-                        name="parcel_name"
-                        id="parcel_name"
-                        value={formData.parcel_name}
+                        name="parcel_id"
+                        id="parcel_id"
+                        value={formData.parcel_id}
                         onChange={handleInputChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="Enter parcel name"
                         required
                       />
-                      {errors.parcel_name && (
+                      {errors.parcel_id && (
                         <span className="text-xs text-red-600">
-                          {errors.parcel_name[0]}!
+                          {errors.parcel_id[0]}!
                         </span>
                       )}
                     </div>
@@ -341,6 +344,7 @@ export default function OrderForm() {
                       {distance !== "" && (
                         <div className="sm:col-span-1">
                           <dt className="text-sm font-medium text-gray-500 underline">
+
                             Delivery details
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900">
@@ -374,7 +378,7 @@ export default function OrderForm() {
                           aria-describedby="description"
                           rows={4}
                           className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          defaultValue={""}
+                          // defaultValue={""}
                           value={formData.description}
                           onChange={handleInputChange}
                           required
@@ -426,6 +430,43 @@ export default function OrderForm() {
           <span className="text-xs text-red-600">{errors.recipient_phone_number[0]}!</span>
         )}
       </div>
+      <div className="col-span-6 sm:col-span-2">
+  <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+    Status
+  </label>
+  <input
+    type="text"
+    name="status"
+    id="status"
+    value={formData.status}
+    readOnly 
+    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+    placeholder="Pending"
+  />
+  {errors.status && (
+    <span className="text-xs text-red-600">{errors.status[0]}!</span>
+  )}
+</div>
+
+<div className="col-span-6 sm:col-span-2">
+  <label htmlFor="present_location" className="block text-sm font-medium text-gray-700">
+    Present Location
+  </label>
+  <input
+    type="text"
+    name="present_location"
+    id="present_location"
+    value={formData.present_location}
+    readOnly 
+    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+    placeholder="Warehouse"
+  />
+  {errors.present_location && (
+    <span className="text-xs text-red-600">{errors.present_location[0]}!</span>
+  )}
+</div>
+
+      
 
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
@@ -448,7 +489,7 @@ export default function OrderForm() {
             center={center}
             zoom={10}
           >
-            <MarkerF position={center} />
+            <Marker position={center} />
             {directionsResponse && (
               <DirectionsRenderer directions={directionsResponse} />
             )}

@@ -1,13 +1,13 @@
 from config import app, db, login_manager
 from models import User, Parcel
-from forms import SignUpForm, LoginForm, LoginForm,ParcelForm,ChangeDestinationForm
-from flask import render_template, session, redirect, url_for, flash, request, jsonify, make_response
+from flask import Flask, render_template, session, redirect, url_for, flash, request, jsonify, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
+from flask_cors import cross_origin
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -46,37 +46,51 @@ def token_required(f):
 	return decorated
 
 # updated signup route
-@app.route('/signup', methods =['POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
-	# creates a dictionary of the form data
-	data = request.form
+    data = request.get_json()
 
-	# gets username, email and password
-	username, email = data.get('username'), data.get('email')
-	password, role = data.get('password'), data.get('role')
+    # Ensure that the required fields are present in the request
+    required_fields = ['username', 'email', 'password', 'role']
+    if not all(field in data for field in required_fields):
+        response = jsonify({'errors': {'message': 'Missing required fields'}})
+        response.status_code = 400  # Bad Request
+        return response
 
-	# checking for existing user
-	user = User.query\
-		.filter_by(email = email)\
-		.first()
-	if not user:
-		# database ORM object
-		user = User(
-			username = username,
-			email = email,
-			password = generate_password_hash(password),
-            role = role
-		)
-		# insert user
-		db.session.add(user)
-		db.session.commit()
+    # Extract data from the request
+    username = data['username']
+    email = data['email']
+    password = data['password']
+    role = data['role']
 
-		return make_response('Successfully registered.', 201)
-	else:
-		# returns 202 if user already exists
-		return make_response('User already exists. Please Log in.', 202)
-    
+    # Check if 'password' is not None before hashing it
+    if password is not None:
+        hashed_password = generate_password_hash(password)
+    else:
+        response = jsonify({'errors': {'password': ['Password is missing or invalid.']}})
+        response.status_code = 400  # Bad Request
+        return response
 
+    # Check if the user with the provided email already exists
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        response = jsonify({'errors': {'message': 'User already exists. Please Log in.'}})
+        response.status_code = 409  # Conflict
+        return response
+
+    # Create a new user and save it to the database
+    new_user = User(
+        username=username,
+        email=email,
+        password=hashed_password,
+        role=role
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
+    response = jsonify({'message': 'Successfully registered.'})
+    response.status_code = 201  # Created
+    return response
 # updated route for logging user in
 # @app.route('/login', methods =['POST'])
 # def login():
@@ -182,31 +196,36 @@ def logout():
 
 
 @app.route('/create_order', methods=['POST'])
-@jwt_required()
+@jwt_required()  # Add JWT authentication if needed
 def create_order():
     user_id = get_jwt_identity()
 
     if user_id:
         data = request.get_json()
+
+        # Check for and extract fields from the JSON data
         weight = data.get('weight')
         description = data.get('description')
         recipient_name = data.get('recipient_name')
         recipient_phone_number = data.get('recipient_phone_number')
         pickup_location = data.get('pickup_location')
         destination = data.get('destination')
-        
+        status = data.get('status')
+        present_location = data.get('present_location')
 
-    
+        # You may add more fields here if needed
+
+        # Create a new Parcel object and save it to the database
         new_parcel = Parcel(
             weight=weight,
-            description=description,
+            description=description,  
             recipient_name=recipient_name,
             recipient_phone_number=recipient_phone_number,
             pickup_location=pickup_location,
             destination=destination,
-            status='Pending',
-            user_id=user_id,  
-            present_location='Warehouse'
+            status=status,
+            user_id=user_id,
+            present_location=present_location
         )
 
         db.session.add(new_parcel)
@@ -216,14 +235,16 @@ def create_order():
     else:
         return jsonify({"message": "User not found or unauthorized"}), 401
 
-
 @app.route('/user_parcels', methods=['GET'])
 @jwt_required()
 def user_parcels():
-		user_id = get_jwt_identity()
-		all_parcels = Parcel.query.filter_by(user_id=user_id).all()
-		parcels_list = [parcel.serialize() for parcel in all_parcels]
-		return jsonify(parcels_list)
+    user_id = get_jwt_identity()
+    all_parcels = Parcel.query.filter_by(user_id=user_id).all()
+    parcels_list = [parcel.serialize() for parcel in all_parcels]
+    response = jsonify(parcels_list)
+    return response
+
+
     
 
 @app.route('/change_destination/<int:parcel_id>', methods=['GET', 'PATCH'])
@@ -250,6 +271,7 @@ def change_destination(parcel_id):
 
 
 @app.route('/cancel_order/<int:parcel_id>', methods=['GET','DELETE'])
+@cross_origin()
 @jwt_required()
 def cancel_order(parcel_id):
     parcel_order = Parcel.query.get(parcel_id)

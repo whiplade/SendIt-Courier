@@ -24,8 +24,8 @@ def create_fake_parcel(user_id):
     destination = fake.address()
     status = fake.random_element(elements=('pending', 'in transit', 'delivered'))
     present_location = fake.address()
-    created_at = datetime.utcnow()
-    updated_at = datetime.utcnow()
+    # created_at = datetime.utcnow()
+    # updated_at = datetime.utcnow()
     
     parcel = Parcel(
         weight=weight,
@@ -37,8 +37,8 @@ def create_fake_parcel(user_id):
         status=status,
         user_id=user_id,
         present_location=present_location,
-        created_at=created_at,
-        updated_at=updated_at
+        # created_at=created_at,
+        # updated_at=updated_at
     )
     return parcel
 
