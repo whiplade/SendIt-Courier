@@ -24,7 +24,7 @@ def signup():
     if form.validate_on_submit():
         existing_user = User.query.filter_by(username=form.username.data).first()
         if existing_user:
-            flash('Username already exists. Please choose a different one.', 'danger')
+            flash('Username already exists. Please choose a different one.')
         else:
             user = User(username=form.username.data, password=form.password.data, email=form.email.data, role='user')
             user.set_password(form.password.data)
