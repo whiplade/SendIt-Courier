@@ -29,6 +29,20 @@ export default function Home() {
     'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'
   ];
+  const cardData = [
+    {
+      type: 'Package',
+      recipient: 'John Doe',
+      from: 'Warehouse',
+      to: 'Nairobi, Kenya',
+    },
+    {
+      type: 'Package',
+      recipient: 'Bakhita A',
+      from: 'Brooklyn, NewYolk',
+      to: 'Nairobi, Kenya',
+    },
+  ];
 
   return (
     <div>
@@ -37,18 +51,21 @@ export default function Home() {
         <p className="time-text">{formatAMPM(time)}</p>
         <p className="day-text">{days[time.getDay()]}, {months[time.getMonth()]} {time.getDate()}, {time.getFullYear()}</p>
       </div>
+      <div className="cardpackagebox" >
+      {cardData.map((item, index) => (
       <div className="cardpackage">
         <div className="img">
         <img src='https://static.vecteezy.com/system/resources/previews/029/785/453/original/box-package-symbol-icon-design-illustration-vector.jpg' alt='img'/>
         </div>
         <div className="text">
-          <p className="h3">Type: Package</p>
-          <p className="detailsp">Recipient: Jonh Doe</p>
-          <p className="detailsp">From: Warehouse</p>
-          <p className="detailsp">To: Nairobi,Kenya</p>
+          <p className="h3">Type: {item.type}</p>
+          <p className="detailsp">Recipient: {item.recipient}</p>
+          <p className="detailsp">From: {item.from}</p>
+          <p className="detailsp">To: {item.to}</p>
         </div>
       </div>
-      
+      ))}
+      </div>
     </div>
   );
 }

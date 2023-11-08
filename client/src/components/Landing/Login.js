@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
-import NavBar from '../../NavBar'
+import NavBar from '../../NavBar';
 import { useNavigate } from 'react-router-dom';
-
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState('admin'); 
   const [rememberMe, setRememberMe] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  const useLogin = () => {
-    navigate('/user/home');
-  };
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(`Username: ${username}, Password: ${password}, Remember me: ${rememberMe}`);
+
+
+    const userRoles = {
+      'admin@example.com': 'admin',
+      'user@example.com': 'user',
+    };
+
+
+    const userRole = userRoles[username] || selectedRole; 
+
+    console.log(`Username: ${username}, Password: ${password}, Remember me: ${rememberMe}, Role: ${userRole}`);
+
+
+    if (userRole === 'admin') {
+      navigate('/admin');
+    } else {
+      navigate('/user/home');
+    }
   };
 
   return (
@@ -38,13 +52,19 @@ export default function Login() {
 
         <div className="flex-row">
           <div>
+            <label>User Role:</label>
+            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div>
             <input type='checkbox' checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
             <label>Remember me</label>
           </div>
-          <span className="span">Forgot password?</span>
         </div>
 
-        <button className="button-submit"  onClick={useLogin} >Log In</button>
+        <button className="button-submit">Log In</button>
 
         <p className="p">Don't have an account? <span className="span">Sign In</span></p>
         <p className="p line">Or With</p>

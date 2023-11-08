@@ -27,7 +27,6 @@ export default function SignUp() {
     formDataToSend.append('email', formData.email);
     formDataToSend.append('password', formData.password);
     formDataToSend.append('confirmPassword', formData.confirmPassword);
-    formDataToSend.append('role', formData.role);
 
     try {
       const response = await axios.post('/signup', formDataToSend, {
@@ -44,15 +43,7 @@ export default function SignUp() {
     
     }
   };
-  const handleGetRequest = async () => {
-    try {
-      const response = await axios.get('/signup'); 
-      console.log(response.data); 
 
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +57,6 @@ export default function SignUp() {
     <div>
       <NavBar />
       <div className='compheading'>Signup</div>
-      <button onClick={handleGetRequest}>Fetch Data</button>
       <form className="form" onSubmit={handleSubmit}>
         <div className="flex-column">
           <label>UserName</label>
@@ -122,14 +112,6 @@ export default function SignUp() {
           />
         </div>
         <div className="inputForm">
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleInputChange}
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
         </div>
         <button className="button-submit" onClick={useSignup}  type="submit">Sign Up</button>
       </form>
