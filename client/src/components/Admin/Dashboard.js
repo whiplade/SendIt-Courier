@@ -49,14 +49,6 @@ const Dashboard = () => {
     'September', 'October', 'November', 'December'
   ];
 
-
-//   const sampleUser = userData[0];
-
-
-//   const onSave = (newUserData) => {
-//     console.log('Saving user data:', newUserData);
-//   };
-
   return (
     <div>
       <div className="card">

@@ -30,7 +30,7 @@ export default function Modal({ user, onSave }) {
 
   return (
     <div className="modal">
-        <h1>Admin Mode</h1>
+        <h1 className='cartheading'>Admin Mode</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Name:

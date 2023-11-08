@@ -38,7 +38,7 @@ export default function Cart() {
     <div>
       <NavUser />
       <h1 className='cartheading'>Cart</h1>
-      <button className='checkoutbtn' onClick={useOrder}>Checkout</button>
+      <button className='checkoutbtn' onClick={useOrder}>Checkout Here</button>
       <div className='cardcartbox'>
     
       {cartData.map((item, index) => {

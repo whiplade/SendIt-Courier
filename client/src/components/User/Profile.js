@@ -17,7 +17,6 @@ export default function Profile() {
   return (
     <div>
       <NavUser />
-      <h1 className='cartheading'>Account</h1>
       <div className="carduser">
         <header className="card-header">
           <p>SendIt</p>
@@ -35,9 +34,9 @@ export default function Profile() {
           </div>
         </div>
         <div className="tags">
-          <button  className='submit-btn' onClick={useHome}>Packages</button>
-          <button  className='submit-btn' onClick={useSend}>Send</button>
-          <button  className='submit-btn' onClick={useCart}>Cart</button>
+          <button  className='profilebtn' onClick={useHome}>Packages</button>
+          <button  className='profilebtn' onClick={useSend}>Send</button>
+          <button  className='profilebtn' onClick={useCart}>Cart</button>
         </div>
       </div>
     </div>

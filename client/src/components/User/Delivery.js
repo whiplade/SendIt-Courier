@@ -2,7 +2,6 @@ import React from 'react';
 import NavUser from './NavUser';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Map from './Maps';
 
 
 function Delivery() {
@@ -24,12 +23,11 @@ function Delivery() {
   
 
   const useCheckout = () => {
-    navigate('/user/cart');
+    navigate('/user/track');
   };
 
   return (
     <div>
-    <h1 className='cartheading'>Delivery</h1>
     <div className="deliverycomp">
       <NavUser />
       <div className="subscribe">
@@ -82,11 +80,10 @@ function Delivery() {
           </small>
           <div data-range="#third" data-value-1="#second" data-value-0="#first" className="slider">
             <label className="label-min-value">1</label>
-            <label className="label-max-value">10 000</label>
           </div>
           <div>
             <button className="cartbutton" onClick={useCheckout}>CHECKOUT</button>
-            <Map/>
+            <button className="cartbutton" onClick={useCheckout}>TRACK PKG</button>
           </div>
         </div>
         
