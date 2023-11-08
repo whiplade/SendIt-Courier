@@ -12,8 +12,8 @@ export default function Cart() {
         <p className="card__content">To: Nairobi,Kenya</p>
         <p className="card__content">Weight: 3Kg</p>
         <div className="card__date">April 15, 2022</div>
-        <button className='btncart'>Delete</button>
-        <button className='btncart'>Edit</button>
+        <button className='cartbutton'>Delete</button>
+        <button className='cartbutton'>Edit</button>
       </div>
      <div className="custom-card">
         <button type="button" className="custom-dismiss">×</button>

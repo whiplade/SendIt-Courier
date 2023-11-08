@@ -35,9 +35,9 @@ export default function Profile() {
           </div>
         </div>
         <div className="tags">
-          <button onClick={useHome}>Packages</button>
-          <button onClick={useSend}>Send</button>
-          <button onClick={useCart}>Cart</button>
+          <button  className='submit-btn' onClick={useHome}>Packages</button>
+          <button  className='submit-btn' onClick={useSend}>Send</button>
+          <button  className='submit-btn' onClick={useCart}>Cart</button>
         </div>
       </div>
     </div>

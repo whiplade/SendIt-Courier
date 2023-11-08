@@ -67,7 +67,7 @@ function Delivery() {
             <label className="label-max-value">10 000</label>
           </div>
           <div>
-            <button className="submit-checkout" onClick={useCheckout}>CHECKOUT</button>
+            <button className="cartbutton" onClick={useCheckout}>CHECKOUT</button>
           </div>
         </div>
       </div>

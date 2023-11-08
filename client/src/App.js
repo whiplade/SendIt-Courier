@@ -17,7 +17,7 @@ const App = () => (
       <div className="App">
         <Routes>
           <Route path="/user/*" element={<User />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/*" element={<Admin />} />
           <Route path="/" element={<Landing />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
