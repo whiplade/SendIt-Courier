@@ -4,6 +4,7 @@ import Home from './Home';
 import Delivery from './Delivery';
 import Profile from './Profile';
 import Cart from './Cart';
+import PlacedOrder from './PlacedOrder';
 
 export default function User() {
   return (
@@ -13,6 +14,7 @@ export default function User() {
         <Route path="/user/delivery" element={<Delivery />} />
         <Route path="/user/profile" element={<Profile />} />
         <Route path="/user/cart" element={<Cart />} />
+        <Route path="/user/order" element={<PlacedOrder />} />
       </Routes>
     </div>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
-import About from './components/Landing/About';
+
 import Pricing from './components/Landing/Pricing';
 import Login from './components/Landing/Login';
 import SignUp from './components/Landing/SignUp';
@@ -19,7 +19,6 @@ const App = () => (
           <Route path="/user/*" element={<User />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/" element={<Landing />} />
-          <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<SignUp />} />

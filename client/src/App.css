@@ -45,6 +45,7 @@
 .nav-icon {
   width: 32px;
   height: 32px;
+  margin-left: 10px;
 }
 
 .landing-container {
@@ -91,7 +92,7 @@
   font-family: lDidot, serif;
 }
 
-/* Form styles */
+
 form {
   width: 300px;
   margin: 0 auto;
@@ -180,7 +181,22 @@ input[type="submit"] {
   font-weight: 500;
   cursor: pointer;
 }
+.checkoutbtn {
+  background: linear-gradient(90deg,#ff8a00,#e52e71);
+  border: none;
+  color: black;
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 30px;
+  height: 50px;
+  width: 50%;
+  cursor: pointer;
+}
 
+.checkoutbtn:hover {
+  color: white;
+}
 
 .button-submit {
   margin: 20px 0 10px 0;
@@ -592,6 +608,11 @@ input[type="submit"] {
   flex-direction: row; 
   gap: 20px; 
 }
+.cardcartbox {
+  display: flex;
+  flex-direction: row; 
+  gap: 20px; 
+}
 
 
 .card-content .card-title {
@@ -838,11 +859,11 @@ input[type="submit"] {
 }
 .custom-card {
   overflow: hidden;
-  position: relative;
   text-align: left;
   border-radius: 0.5rem;
-  max-width: 290px;
-  margin-top: 150px;
+  max-width: 500px;
+  max-height: 800px;
+  margin-top: 20px;
   margin-left: 450px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   background-color: #fff;
@@ -906,6 +927,13 @@ input[type="submit"] {
 .custom-title {
   color: #066e29;
   font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.orderh1{
+  color: #9A8174;
+  font-size: 3rem;
   font-weight: 600;
   line-height: 1.5rem;
 }
