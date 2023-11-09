@@ -1,4 +1,4 @@
-import OrderForm from "../components/Landing/OrderForm";
+import OrderForm from "../components/OrderForm";
 
 
 function CreateOrder() {

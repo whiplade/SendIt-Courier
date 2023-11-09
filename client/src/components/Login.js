@@ -9,7 +9,7 @@ function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe: false, 
+    rememberMe: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -28,12 +28,18 @@ function Login() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        
       },
-      body: JSON.stringify(formData), 
+      body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error("Authentication failed");
+        }
+      })
       .then((data) => {
+        // Check if there are no errors in the response data
         if (!data.errors) {
           Swal.fire({
             position: "top-end",
@@ -42,19 +48,39 @@ function Login() {
             showConfirmButton: false,
             timer: 1500,
           });
-          if(!data.errors) {
-            localStorage.setItem("access_token", data.access_token)
-          }
+          localStorage.setItem("access_token", data.access_token);
           setTimeout(() => {
-            if (data.user && data.user.role === "admin") {
-              navigate("/AdminDashboard");
+            if (data.user && data.user.email) {
+              if (data.user.email === "nathan@admin.com") {
+                navigate("/AdminAllParcels");
+              } else {
+                navigate("/home");
+              }
             } else {
-              navigate("/");
+              console.error("User data is missing or incomplete:", data.user);
             }
+            
           }, 1500);
         } else {
+          // Handle errors in the response data
           setErrors(data.errors);
+          // Additional: Show an alert or take other actions to notify the user
+          Swal.fire({
+            icon: "error",
+            title: "Login failed",
+            text: "Please check your credentials and try again",
+          });
         }
+      })
+      .catch((error) => {
+        // Handle network or other errors
+        console.error("Login error:", error);
+        // Additional: Show an alert or take other actions to notify the user
+        Swal.fire({
+          icon: "error",
+          title: "Login failed",
+          text: "An unexpected error occurred. Please try again later.",
+        });
       });
   }
 
@@ -71,14 +97,14 @@ function Login() {
               </div>
               <form onSubmit={login} className="space-y-3">
                 <div>
-                <label
-                    htmlFor="email"  
+                  <label
+                    htmlFor="email"
                     className="block mb-2 text-sm font-medium text-gray-900"
                   >
                     Email
                   </label>
                   <input
-                    type="email"  
+                    type="email"
                     name="email"
                     id="email"
                     value={formData.email}

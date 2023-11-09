@@ -2,6 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function NavBar({ isLoggedIn, handleLogout }) {
+  // If not logged in, do not render the NavBar
+  if (!isLoggedIn) {
+    return null;
+  }
+
   return (
     <div className='Navcomponent'>
       <img
@@ -30,20 +35,9 @@ export default function NavBar({ isLoggedIn, handleLogout }) {
           <Link to="/allorders" className="nav-link">
             All Orders
           </Link>
-          {isLoggedIn ? (
-            <button onClick={handleLogout} className="nav-link">
-              Logout
-            </button>
-          ) : (
-            <>
-              <Link to="/login" className="nav-link">
-                Login
-              </Link>
-              <Link to="/signup" className="nav-link">
-                SignUp
-              </Link>
-            </>
-          )}
+          <button onClick={handleLogout} className="nav-link">
+            Logout
+          </button>
         </div>
       </div>
     </div>

@@ -85,6 +85,11 @@ def signup():
         password=hashed_password,
         role=role
     )
+
+     # Check if the user being created is the super admin
+    if username.lower() == 'nathan' and email.lower() == 'nathan@admin.com' and role.lower() == 'admin':
+        new_user.is_super_admin = True
+
     db.session.add(new_user)
     db.session.commit()
 
@@ -153,10 +158,8 @@ def signup():
 #         return jsonify(message='Invalid username or password'), 401
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
-    if not request.is_json:
-        return jsonify({'message': 'Missing JSON in request'}), 400
-
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -169,11 +172,14 @@ def login():
     if not user or not check_password_hash(user.password, password):
         return jsonify({'message': 'Invalid credentials'}), 401
 
-    access_token = create_access_token(identity=user.user_id)
-    return jsonify({'message': 'Login successful', 'access_token': access_token}), 200
-	
+    access_token = create_access_token(identity=user.user_id, additional_claims={'role': user.role})
 
+    # Check if the user is the super admin
+    if user.email.lower() == 'nathan@admin.com' and password == '1234':
+        # Assuming you have a route named '/AdminAllParcels'
+        return jsonify({'message': 'Login successful', 'access_token': access_token, 'is_admin': True}), 200
 
+    return jsonify({'message': 'Login successful', 'access_token': access_token, 'is_admin': False}), 200
 # @app.route('/dashboard')
 # @jwt_required()
 # def dashboard():
@@ -330,6 +336,19 @@ def change_present_location(parcel_id):
 	
 	else:
 		return jsonify({"message":'Unauthorized'}), 401
+       
+@app.route('/admin/all_parcels',methods=['GET'])
+@jwt_required()
+def get_all_parcels():
+    user = User.query.get(get_jwt_identity())
+
+    if user.role == 'admin':
+        all_parcels = Parcel.query.all()
+        parcels_list = [parcel.serialize() for parcel in all_parcels]
+        print(parcels_list)
+        return jsonify(parcels_list)
+    return jsonify({'message': 'Unauthorized'}), 401
+
 
 
 

@@ -10,7 +10,7 @@ function SignUp() {
     email: "",
     password: "",
     password_confirmation: "",
-    role: "user", 
+    role: "user", // Set the default role to "user"
   });
 
   const [errors, setErrors] = useState({});
@@ -30,7 +30,7 @@ function SignUp() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData), 
+      body: JSON.stringify(formData),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -156,25 +156,6 @@ function SignUp() {
                       {errors.password_confirmation[0]}!
                     </span>
                   )}
-                </div>
-                <div>
-                  <label
-                    htmlFor="role"
-                    className="block mb-2 text-sm font-medium text-gray-900"
-                  >
-                    Role
-                  </label>
-                  <select
-                    name="role"
-                    id="role"
-                    value={formData.role}
-                    onChange={handleInputChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                    required
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
                 </div>
                 <button
                   type="submit"

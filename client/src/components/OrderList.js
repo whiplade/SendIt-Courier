@@ -7,8 +7,8 @@ function OrderList() {
   const [parcels, setParcels] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const viewSingleOrder = (parcelId) => {
-    navigate(`/OrderDetails`);
+  const viewSingleOrder = (parcel_Id) => {
+    navigate(`/OrderDetails`); 
   };
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function OrderList() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${access_token}`,
+            "Authorization": `Bearer ${access_token}`, 
           },
         });
 
@@ -35,19 +35,20 @@ function OrderList() {
         }
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch parcel data. Status: ${response.status}`);
+          const responseData = await response.json();
+          console.error("Error fetching parcel data: ", responseData);
+        } else {
+          const data = await response.json();
+          console.log("Fetched parcels:", data);
+          setParcels(data);
         }
-
-        const data = await response.json();
-        console.log("Fetched parcels:", data);
-
-        setParcels(data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching parcel data: ", error);
-        setLoading(false);
+      } finally {
+        setLoading(false); // Ensure setLoading(false) is called in both success and error cases.
       }
     };
+
     fetchParcels();
   }, [navigate]);
 
@@ -78,7 +79,7 @@ function OrderList() {
               onClick={() => viewSingleOrder(parcel.id)}
               className="text-xl underline font-medium leading-6 text-gray-900 mb-2 cursor-pointer"
             >
-              Order ID: {parcel.id}
+              Order ID: {parcel.parcel_id}
             </h1>
           </div>
         ))}

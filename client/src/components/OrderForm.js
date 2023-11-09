@@ -13,7 +13,7 @@ import {
 export default function OrderForm() {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ["places"],
   });
 
@@ -23,6 +23,7 @@ export default function OrderForm() {
   };
 
   const navigate = useNavigate();
+
 
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");

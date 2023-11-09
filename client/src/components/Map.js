@@ -1,52 +1,56 @@
-import React, { useState } from "react";
+/* eslint-disable no-undef */
+import React, { useEffect, useState } from "react";
 import {
   GoogleMap,
   Marker,
   useJsApiLoader,
   DirectionsRenderer,
 } from "@react-google-maps/api";
-import BeatLoader from "react-spinners/BeatLoader";
 
-function Map({ formData }) {
+function Map() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [map, setMap] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY; 
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API,
+    googleMapsApiKey: googleMapsApiKey, 
     libraries: ["places"],
   });
 
   const center = {
     lat: -1.2921,
-    lng: 36.8219,
+    lng: 36.8219, 
   };
 
+  useEffect(() => {
+    if (map) {
+      calculateRoute();
+    }
+  }, [map]);
+
+  function onLoad(mapInstance) {
+    setMap(mapInstance);
+  }
+
   if (!isLoaded) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <BeatLoader
-          loading={!isLoaded}
-          color="#4F46E5"
-          size={100}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
-      </div>
-    );
+    return <h2 className="text-2xl text-center mt-2">Loading map..</h2>;
   }
 
   async function calculateRoute() {
-    if (formData.pickup_location === "" || formData.destination === "") {
-      return;
-    }
-    const directionsService = new window.google.maps.DirectionsService();
+    // Replace these values with your own pickup and destination coordinates
+    const pickupLocation = { lat: 40.7128, lng: -74.0060 }; // New York City
+    const destination = { lat: 41.8781, lng: -87.6298 }; // Chicago, for example
+
+    const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
-      origin: String(formData.pickup_location),
-      destination: String(formData.destination),
-      travelMode: window.google.maps.TravelMode.DRIVING,
+      origin: String(pickupLocation),
+      destination: String (destination),
+      travelMode: google.maps.TravelMode.DRIVING,
     });
+
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
@@ -74,6 +78,7 @@ function Map({ formData }) {
       </div>
       <div className="flow-root m-12 h-96 border rounded-lg">
         <GoogleMap
+          onLoad={onLoad}
           mapContainerStyle={{ width: "100%", height: "100%" }}
           center={center}
           zoom={10}
@@ -83,14 +88,6 @@ function Map({ formData }) {
             <DirectionsRenderer directions={directionsResponse} />
           )}
         </GoogleMap>
-      </div>
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={calculateRoute}
-          className="bg-indigo-600 hover-bg-indigo-700 text-white font-bold py-2 px-4 rounded focus-outline-none focus-shadow-outline"
-        >
-          Calculate Route
-        </button>
       </div>
     </>
   );
