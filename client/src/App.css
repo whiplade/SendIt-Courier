@@ -955,6 +955,14 @@ input[type="submit"] {
   line-height: 1.25rem;
 }
 
+.custom-text {
+  margin-top: 0.5rem;
+  color: #595b5f;
+  font-size: 0.975rem;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  line-height: 1.25rem;
+}
+
 .custom-actions {
   margin: 0.75rem 1rem;
 }
@@ -1078,6 +1086,7 @@ input[type="submit"] {
   box-decoration-break: clone;
   background-clip: text;
   border-color: white;
+  margin-bottom: 10px;
 
 }
 

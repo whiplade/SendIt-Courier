@@ -274,9 +274,7 @@ export default function OrderForm() {
                           {errors.description[0]}!
                         </span>
                       )}
-                {/* ... (remaining code from your component) */}
             </form>
-            
             </div>
             <div className="card-container">
             <div className="card-content">
@@ -295,22 +293,58 @@ export default function OrderForm() {
               <button className="cartbutton" onClick={useCheckout}>CHECKOUT</button>
               <button className="cartbutton" onClick={useCheckout}>TRACK PKG</button>
             </div>
+            <div className="col-span-6 sm:col-span-2">
+            <label htmlFor="recipient_name" className="custom-text">
+              Recipient Name
+            </label>
+            <input
+              type="text"
+              name="recipient_name"
+              id="recipient_name"
+              value={formData.recipient_name}
+              onChange={handleInputChange}
+              className="submit-input"
+              placeholder="Enter recipient name"
+              required
+            />
+            {errors.recipient_name && (
+              <span className="text-xs text-red-600">{errors.recipient_name[0]}!</span>
+            )}
+          </div>
+          <div className="">
+            <label className='custom-text' htmlFor="recipient_phone_number">
+              Recipient Phone Number
+            </label>
+            <input
+              type="tel"
+              name="recipient_phone_number"
+              id="recipient_phone_number"
+              value={formData.recipient_phone_number}
+              onChange={handleInputChange}
+              className="submit-input"
+              placeholder="Enter recipient phone number"
+              required
+            />
+            {errors.recipient_phone_number && (
+              <span className="text-xs text-red-600">{errors.recipient_phone_number[0]}!</span>
+            )}
+          </div>
           </div>
             </div>
             {isLoaded && (
-    <div className="flow-root m-12 h-96 border rounded-lg">
-      <GoogleMap
-        mapContainerStyle={{ width: "100%", height: "100%" }}
-        center={center}
-        zoom={10}
-      >
-        <Marker position={center} />
-        {directionsResponse && (
-          <DirectionsRenderer directions={directionsResponse} />
-        )}
-      </GoogleMap>
-    </div>
-  )}
+            <div className="flow-root m-12 h-96 border rounded-lg">
+              <GoogleMap
+                mapContainerStyle={{ width: "100%", height: "100%" }}
+                center={center}
+                zoom={10}
+              >
+                <Marker position={center} />
+                {directionsResponse && (
+                  <DirectionsRenderer directions={directionsResponse} />
+                )}
+              </GoogleMap>
+            </div>
+          )}
           </div>
     </>
   );
