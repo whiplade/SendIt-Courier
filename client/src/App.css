@@ -565,11 +565,13 @@ input[type="submit"] {
   background: transparent;
   transition: all .25s ease;
   margin-bottom: 30px; 
+  margin-bottom: 50px;
 }
 
 .subscribe input:focus {
   outline: none;
   border-bottom: 1px solid #9A8174;
+  
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', 'sans-serif';
 }
 
