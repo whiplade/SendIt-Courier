@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import {
   CheckIcon,
-  // TruckIcon,
   XCircleIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  ArrowLeftIcon
 } from "@heroicons/react/20/solid";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "../CSS/AdminAllParcels.css";
 
 export default function AdminAllParcels() {
   const navigate = useNavigate();
@@ -16,11 +17,18 @@ export default function AdminAllParcels() {
 
   const getParcels = async (page) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5555/admin/all_parcels`);
+      const access_token = localStorage.getItem("access_token");
+
+      const response = await fetch(`http://127.0.0.1:5555/admin/all_parcels?page=${page}`, {
+        headers: {
+          "Authorization": `Bearer ${access_token}`,
+        },
+      });
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       setParcels(data);
       setLoading(false);
@@ -45,57 +53,65 @@ export default function AdminAllParcels() {
     return <div className="h-screen">Loading...</div>;
   }
 
-  function singleOrder(e) {
-    e.preventDefault();
-    // Check if the target is an h1 element
-    if (e.target.tagName.toLowerCase() === 'h1') {
-      navigate(`/admin-orders/${e.target.id}`);
-    }
+  const handleParcelClick = (parcel_id) => {
+    console.log(`Clicked on parcel with ID: ${parcel_id}`);
+    navigate(`/adminSingleOrder/${parcel_id}`);
+  };
+
+  function handleNextPageClick() {
+    setCurrentPage((prevPage) => Math.max(prevPage + 1, 1));
+  }
+
+  function handleBackClick() {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   }
 
   return (
     <div>
-      <div className="border-b border-gray-200 flex justify-center gap-4 items-center">
-        <h1 className="text-3xl font-bold">All Parcels</h1>
-        <span>
-          {/* <TruckIcon className="h-6 w-7 text-yellow-500" /> */}
-        </span>
+      <div className="border-b border-gray-200 flex justify-between items-center p-4">
+        <div className="flex items-center">
+          <ArrowLeftIcon
+            className="h-6 w-6 text-gray-500 mr-2 cursor-pointer"
+            onClick={handleBackClick}
+          />
+        </div>
+        <div className="flex justify-center mt-4">
+          <div className="button-container">
+            <button
+              onClick={handleBackClick}
+              className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+            >
+              Back
+            </button>
+            <button
+              onClick={handleNextPageClick}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Next Page
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="container mx-auto mt-4">
         {filterParcels.map((parcel) => (
-          <div key={parcel.id} className="border-b border-gray-200 py-4">
-            <h1
-              onClick={singleOrder}
-              id={parcel.id}
-              className="text-xl underline font-medium leading-6 text-gray-900 mb-2 cursor-pointer"
-            >
-              {parcel.parcel_name}
-            </h1>
-            <h1 className="text-lg font-medium leading-6 text-gray-900 mb-2">
-              Pickup Location: {parcel.pickup_location}
-            </h1>
-            <h1 className="text-lg font-medium leading-6 text-gray-900 mb-2">
-              Destination: {parcel.destination}
-            </h1>
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-gray-500 font-medium">
-                Weight: {parcel.weight}
-              </p>
-              <p className="text-gray-500 font-medium">Price: {parcel.price}</p>
-              <div className="text-gray-500 font-medium flex gap-2">
-                <span>Status: {parcel.status.status}</span>
-                <span className="flex justify-between items-center">
-                  {parcel.status.status === "Delivered" && (
+          <div key={parcel.parcel_id} onClick={() => handleParcelClick(parcel.parcel_id)}>
+            <h1>Parcel ID: {parcel.parcel_id} - {parcel.parcel_name}</h1>
+            <p>Pickup Location: {parcel.pickup_location}</p>
+            <p>Destination: {parcel.destination}</p>
+            <div className="flex justify-between items-center">
+              <p>Weight: {parcel.weight}</p>
+              <p>Price: {parcel.price}</p>
+              <div className="status">
+                <span>Status: {parcel.status && parcel.status.status}</span>
+                <span>
+                  {parcel.status && parcel.status.status === "Delivered" && (
                     <CheckIcon className="h-5 w-5 text-green-500 mr-2" />
                   )}
-                  {/* {parcel.status.status === "In-transit" && (
-                    <TruckIcon className="h-5 w-5 text-yellow-500 mr-2" />
-                  )} */}
-                  {parcel.status.status === "Cancelled" && (
+                  {parcel.status && parcel.status.status === "Cancelled" && (
                     <XCircleIcon className="h-5 w-5 text-red-500 mr-2" />
                   )}
-                  {parcel.status.status === "Pending" && (
+                  {parcel.status && parcel.status.status === "Pending" && (
                     <ArrowPathIcon className="h-5 w-5 text-red-500 mr-2" />
                   )}
                 </span>
@@ -103,6 +119,20 @@ export default function AdminAllParcels() {
             </div>
           </div>
         ))}
+        <div className="button-container">
+          <button
+            onClick={handleBackClick}
+            className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNextPageClick}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Next Page
+          </button>
+        </div>
       </div>
     </div>
   );

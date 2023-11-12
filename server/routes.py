@@ -1,17 +1,12 @@
-from config import app, db, login_manager
+from config import app, db
 from models import User, Parcel
-from flask import Flask, render_template, session, redirect, url_for, flash, request, jsonify, make_response
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask import  request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
 from flask_cors import cross_origin
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id)) 
 
 
 @app.route('/')
@@ -44,6 +39,9 @@ def token_required(f):
 		return f(current_user, *args, **kwargs)
 
 	return decorated
+
+
+
 
 # updated signup route
 @app.route('/signup', methods=['POST'])
@@ -96,66 +94,6 @@ def signup():
     response = jsonify({'message': 'Successfully registered.'})
     response.status_code = 201  # Created
     return response
-# updated route for logging user in
-# @app.route('/login', methods =['POST'])
-# def login():
-# 	# creates dictionary of form data
-# 	auth = request.form
-
-# 	if not auth or not auth.get('email') or not auth.get('password'):
-# 		# returns 401 if any email or / and password is missing
-# 		return make_response(
-# 			'Could not verify!',
-# 			401,
-# 			{'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
-# 		)
-
-# 	user = User.query\
-# 		.filter_by(email = auth.get('email'))\
-# 		.first()
-
-# 	if not user:
-# 		# returns 401 if user does not exist
-# 		return make_response(
-# 			'Could not verify!',
-# 			402,
-# 			{'WWW-Authenticate' : 'Basic realm ="User does not exist !!"'}
-# 		)
-
-# 	if check_password_hash(user.password, auth.get('password')):
-# 		# generates the JWT Token
-# 		token = jwt.encode({
-# 			'user_id': user.user_id
-# 		}, app.config['SECRET_KEY'])
-
-# 		return make_response(jsonify({'token' : token}), 201)
-# 	# returns 403 if password is wrong
-# 	return make_response(
-# 		'Invalid credentials!',
-# 		403,
-# 		{'WWW-Authenticate' : 'Basic realm ="Wrong Password !!"'}
-# 	)
-
-	# if user.password == password:  # Replace with actual password validation logic
-    #     access_token = create_access_token(identity=user.id)
-    #     return jsonify({'access_token': access_token}), 201
-    # else:
-    #     return make_response(jsonify({'message': 'Wrong password.'}), 403)
-
-	# Login route
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     username = data.get('username')
-#     password = data.get('password')
-
-#     # Check if the provided username and password are valid
-#     if username in users and users[username]['password'] == password:
-#         # Create an access token for the user
-#         access_token = create_access_token(identity=username)
-#         return jsonify(access_token=access_token), 200
-#     else:
-#         return jsonify(message='Invalid username or password'), 401
 
 @app.route('/login', methods=['POST'])
 @cross_origin()
@@ -174,25 +112,13 @@ def login():
 
     access_token = create_access_token(identity=user.user_id, additional_claims={'role': user.role})
 
-    # Check if the user is the super admin
-    if user.email.lower() == 'nathan@admin.com' and password == '1234':
-        # Assuming you have a route named '/AdminAllParcels'
-        return jsonify({'message': 'Login successful', 'access_token': access_token, 'is_admin': True}), 200
+    response_data = {
+        'message': 'Login successful',
+        'access_token': access_token,
+        'is_admin': (user.role == 'admin'),
+    }
 
-    return jsonify({'message': 'Login successful', 'access_token': access_token, 'is_admin': False}), 200
-# @app.route('/dashboard')
-# @jwt_required()
-# def dashboard():
-#     user_id = get_jwt_identity()
-#     user = User.query.get(user_id)
-
-#     if user:
-#         if user.role == 'admin':
-#             return 'Welcome to the admin dashboard!'
-#         else:
-#             return 'Welcome to the user dashboard!'
-#     else:
-#         return 'User not found', 404
+    return jsonify(response_data), 200
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -250,7 +176,19 @@ def user_parcels():
     response = jsonify(parcels_list)
     return response
 
+# @app.route('/user_parcels', methods=['GET'])
+# @jwt_required()
+# def get_parcel_details(parcel_id):
+#     user_id = get_jwt_identity()
+    
+#     # Check if the parcel belongs to the authenticated user
+#     parcel = Parcel.query.filter_by(parcel_id=parcel_id, user_id=user_id).first()
 
+#     if parcel:
+#         parcel_details = parcel.serialize()
+#         return jsonify(parcel_details)
+#     else:
+#         return jsonify({'error': 'Parcel not found or does not belong to the user'}), 404
     
 
 @app.route('/change_destination/<int:parcel_id>', methods=['GET', 'PATCH'])
@@ -273,8 +211,7 @@ def change_destination(parcel_id):
 	db.session.commit()
 
 	return jsonify({'message':"Destination updated successfully"}), 200
-
-
+    
 
 @app.route('/cancel_order/<int:parcel_id>', methods=['GET','DELETE'])
 @cross_origin()
@@ -288,33 +225,22 @@ def cancel_order(parcel_id):
 
 #ADMIN ROUTES
 
-@app.route('/change_status/<int:parcel_id>', methods=['GET', 'PATCH'])
-@jwt_required()
+
+@app.route('/change_status/<int:parcel_id>', methods=['PATCH'])
+# @jwt_required()
 def change_status(parcel_id):
+    current_user = get_jwt_identity()
 
-	user = User.query.get(get_jwt_identity())
-	
-	if user.role == 'admin':
-		parcel = Parcel.query.filter_by(parcel_id=parcel_id).first()
-      
-		if parcel is None:
-				return jsonify({'message': 'Parcel not found'}), 404
-
-	
-		data=request.get_json()
-		new_status= data.get('status')
-
-		parcel.status = new_status
-
-		db.session.commit()
-
-		return jsonify({'message':"Status updated!"}), 200
-	
-	else:
-		return jsonify({"message":'Unauthorized'}), 401
+    # Check if the current user has the necessary permissions
+    # (You may need to modify this based on your authentication and authorization logic)
+    if current_user['role'] == 'admin':
+        # Perform the status update logic here
+        return jsonify({"message": "Status updated successfully"}), 200
+    else:
+        return jsonify({"message": "Unauthorized"}), 401
 
 @app.route('/change_location/<int:parcel_id>', methods=['GET', 'PATCH'])
-@jwt_required()
+# @jwt_required()
 def change_present_location(parcel_id):
 	user = User.query.get(get_jwt_identity())
 	
@@ -338,6 +264,7 @@ def change_present_location(parcel_id):
 		return jsonify({"message":'Unauthorized'}), 401
        
 @app.route('/admin/all_parcels',methods=['GET'])
+@cross_origin()
 @jwt_required()
 def get_all_parcels():
     user = User.query.get(get_jwt_identity())
@@ -352,5 +279,7 @@ def get_all_parcels():
 
 
 
+
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5555)
+    app.run(debug=True, host='0.0.0.0', port=5555)

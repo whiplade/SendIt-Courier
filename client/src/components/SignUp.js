@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTruck } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
+import "../CSS/SignUp.css"
 
 function SignUp() {
   const navigate = useNavigate();
@@ -25,6 +26,23 @@ function SignUp() {
 
   function register(e) {
     e.preventDefault();
+    if (
+      formData.username.toLowerCase() === 'nathan' &&
+      formData.email.toLowerCase() === 'nathan@admin.com' &&
+      formData.password === '1234'
+    ) {
+      // Admin login successful
+      // You may want to handle admin-specific logic here
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Admin login successful',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      setTimeout(() => navigate('/AdminAllParcel'), 1500);
+      return;
+    }
     fetch("http://127.0.0.1:5555/signup", {
       method: "POST",
       headers: {
@@ -50,7 +68,7 @@ function SignUp() {
   }
 
   return (
-    <div>
+    <div className="image">
       <section className="bg-slate-300">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="w-full bg-white rounded-lg shadow-lg shadow-slate-900 md:mt-0 sm:max-w-md xl:p-0">

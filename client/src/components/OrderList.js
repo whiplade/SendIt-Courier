@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
+import "../CSS/OrderList.css";
 
 function OrderList() {
   const navigate = useNavigate();
   const [parcels, setParcels] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const viewSingleOrder = (parcel_Id) => {
-    navigate(`/OrderDetails`); 
+  // View single order details of parcel upon click
+  const viewSingleOrder = (parcel_id) => {
+    navigate(`/OrderDetails`);
   };
 
   useEffect(() => {
@@ -25,7 +27,7 @@ function OrderList() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${access_token}`, 
+            Authorization: `Bearer ${access_token}`,
           },
         });
 
@@ -72,15 +74,19 @@ function OrderList() {
         <h1 className="text-3xl font-bold">Your Orders</h1>
       </div>
 
-      <div className="container mx-auto mt-4">
+      <div className="container mx-auto mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {parcels.map((parcel) => (
-          <div key={parcel.id} className="border-b border-gray-200 py-4">
-            <h1
-              onClick={() => viewSingleOrder(parcel.id)}
-              className="text-xl underline font-medium leading-6 text-gray-900 mb-2 cursor-pointer"
-            >
+          <div
+            key={parcel.parcel_id}
+            className="card"
+            onClick={() => viewSingleOrder(parcel.parcel_id)}
+          >
+            <h2 className="text-xl font-medium text-gray-900 mb-2">
               Order ID: {parcel.parcel_id}
-            </h1>
+            </h2>
+            <p>Destination: {parcel.destination}</p>
+            <p>Pickup Location: {parcel.pickup_location}</p>
+            {/* Add more details to display in the card if needed */}
           </div>
         ))}
       </div>

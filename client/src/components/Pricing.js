@@ -44,7 +44,7 @@ export default function Pricing() {
                 className="cta-button"
                 href="/signin"
               >
-                Get started
+              
               </a>
             </div>
           </div>

@@ -2,18 +2,41 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 
 
-export default function Home() {
-    return (
-      <div>
-         {/* Signup button */}
-         <Link to="/signup">
-          <button className="signup-button">Sign Up</button>
-        </Link>
+export default function Landing() {
 
-        {/* Login button */}
-        <Link to="/login">
-          <button className="login-button">Login</button>
-        </Link>
+  const BarNav = () => (
+    <div className='Navcomponent'>
+      <img src='https://cdn-icons-png.flaticon.com/128/75/75784.png?uid=R122397876&track=ais' alt='alt' className='nav-icon' />
+      <div className='headers'>
+        <h1>
+          <Link to="/" className="header">
+            SENDIT
+          </Link>
+        </h1>
+      </div>
+      <div className='Nav'>
+        <div className="NavBar">
+          
+          <Link to="/pricing" className="nav-link">
+            Pricing
+          </Link>
+          <Link to="/login" className="nav-link">
+            Login
+          </Link>
+          <Link to="/signup" className="nav-link">
+            SignUp
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+
+    return (
+      <>
+      <div>
+        <BarNav />
+      </div>
+      <div>
         <div className='landing-container'>
           <div className='landing-text'><h1 className='landingheading'>Fastest Deliveries And Easy PickUp</h1></div>
           <div className='landing-image'><img src='https://media.istockphoto.com/id/1325240511/vector/young-delivery-man-with-box-courier-with-a-box-in-his-hands-vector-flat-cartoon-illustration.jpg?s=612x612&w=0&k=20&c=krUS8Yv2PZ51JQPIaEYBLKrIx90MNTrA5Pl4faxoQyM=' alt='alt' className='img1landing'/></div>
@@ -31,6 +54,7 @@ export default function Home() {
         </div>
 
       </div>
+      </>
     )
   }
   

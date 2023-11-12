@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FaTruck } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
+import "../CSS/Login.css"
+
 
 function Login() {
   const navigate = useNavigate();
@@ -50,16 +52,11 @@ function Login() {
           });
           localStorage.setItem("access_token", data.access_token);
           setTimeout(() => {
-            if (data.user && data.user.email) {
-              if (data.user.email === "nathan@admin.com") {
-                navigate("/AdminAllParcels");
-              } else {
-                navigate("/home");
-              }
+            if (data.is_admin) {
+              navigate("/AdminAllParcels");
             } else {
-              console.error("User data is missing or incomplete:", data.user);
+              navigate("/home");
             }
-            
           }, 1500);
         } else {
           // Handle errors in the response data
@@ -86,7 +83,7 @@ function Login() {
 
 
   return (
-    <div>
+    <div className="background">
       <section className="bg-slate-300">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="w-full bg-white rounded-lg shadow-lg shadow-slate-900 md:mt-0 sm:max-w-md xl:p-0">
@@ -128,7 +125,7 @@ function Login() {
                     type="password"
                     name="password"
                     id="password"
-                    placeholder="password"
+                    placeholder="Password"
                     value={formData.password}
                     onChange={handleInputChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"

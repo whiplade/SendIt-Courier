@@ -4,11 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
-
+import "../CSS/OrderDetails.css";
 
 let currentLocationMarker;
 let newDestinationMarker;
-
 
 function OrderDetails() {
   const { parcel_id } = useParams();
@@ -16,7 +15,10 @@ function OrderDetails() {
   const [orderDetails, setOrderDetails] = useState({});
   const [loading, setLoading] = useState(true);
   const [orders] = useState([]);
-  const [newDestination, setNewDestination] = useState({ latitude: 0, longitude: 0 }); // State to store the new destination
+  const [newDestination, setNewDestination] = useState({
+    latitude: 0,
+    longitude: 0,
+  }); // State to store the new destination
 
   const loadGoogleMapsAPI = () => {
     const script = document.createElement("script");
@@ -27,31 +29,45 @@ function OrderDetails() {
     document.head.appendChild(script);
   };
 
-  
+  const initializeMap = () => {
+    if (
+      window.google &&
+      orderDetails.latitude &&
+      orderDetails.longitude
+    ) {
+      const mapOptions = {
+        center: {
+          lat: orderDetails.latitude,
+          lng: orderDetails.longitude,
+        },
+        zoom: 10,
+      };
 
-const initializeMap = () => {
-  if (window.google && orderDetails.latitude && orderDetails.longitude) {
-    const mapOptions = {
-      center: { lat: orderDetails.latitude, lng: orderDetails.longitude },
-      zoom: 10,
-    };
+      const map = new window.google.maps.Map(
+        document.getElementById("map"),
+        mapOptions
+      );
 
-    const map = new window.google.maps.Map(document.getElementById("map"), mapOptions);
-
-    // Assign a marker for the current location (orderDetails.latitude, orderDetails.longitude) to the variable
-    currentLocationMarker = new window.google.maps.Marker({
-      position: { lat: orderDetails.latitude, lng: orderDetails.longitude },
-      map: map,
-      title: "Current Location",
-    });
-
-    // Add a marker for the new destination (newDestination.latitude, newDestination.longitude)
-    if (newDestination.latitude && newDestination.longitude) {
-      newDestinationMarker = new window.google.maps.Marker({
-        position: { lat: newDestination.latitude, lng: newDestination.longitude },
+      // Assign a marker for the current location (orderDetails.latitude, orderDetails.longitude) to the variable
+      currentLocationMarker = new window.google.maps.Marker({
+        position: {
+          lat: orderDetails.latitude,
+          lng: orderDetails.longitude,
+        },
         map: map,
-        title: "New Destination",
+        title: "Current Location",
       });
+
+      // Add a marker for the new destination (newDestination.latitude, newDestination.longitude)
+      if (newDestination.latitude && newDestination.longitude) {
+        newDestinationMarker = new window.google.maps.Marker({
+          position: {
+            lat: newDestination.latitude,
+            lng: newDestination.longitude,
+          },
+          map: map,
+          title: "New Destination",
+        });
       }
     }
   };
@@ -65,13 +81,16 @@ const initializeMap = () => {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:5555/user_parcels`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${access_token}`,
-        },
-      });
+      const response = await fetch(
+        `http://127.0.0.1:5555/user_parcels`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
 
       if (response.status === 401) {
         navigate("/login");
@@ -79,13 +98,18 @@ const initializeMap = () => {
       }
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch order details. Status: ${response.status}`);
+        throw new Error(
+          `Failed to fetch order details. Status: ${response.status}`
+        );
       }
 
       const data = await response.json();
       console.log("Fetched order details:", data);
+      
 
-      const selectedOrder = data.find((parcel) => parcel.parceid === parcel_id);
+      const selectedOrder = data.find(
+        (parcel) => parcel.parceid === parcel_id
+      );
 
       if (selectedOrder) {
         setOrderDetails(selectedOrder);
@@ -127,12 +151,15 @@ const initializeMap = () => {
         return;
       }
 
-      const response = await fetch(`http://127.0.0.1:5555/cancel_order/${parcel_id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${access_token}`,
-        },
-      });
+      const response = await fetch(
+        `http://127.0.0.1:5555/cancel_order/${parcel_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
 
       if (response.status === 401) {
         navigate("/login");
@@ -144,7 +171,9 @@ const initializeMap = () => {
         navigate("/success");
       } else {
         // Handle error
-        throw new Error(`Failed to cancel order. Status: ${response.status}`);
+        throw new Error(
+          `Failed to cancel order. Status: ${response.status}`
+        );
       }
     } catch (error) {
       console.error("Error canceling order: ", error);
@@ -165,14 +194,17 @@ const initializeMap = () => {
 
       const requestData = { new_destination: newDestination }; // Extract the new destination
 
-      const response = await fetch(`http://127.0.0.1:5555/change_destination/${parcel_id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${access_token}`,
-        },
-        body: JSON.stringify(requestData), // Send only the relevant data
-      });
+      const response = await fetch(
+        `http://127.0.0.1:5555/change_destination/${parcel_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+          body: JSON.stringify(requestData), // Send only the relevant data
+        }
+      );
 
       if (response.status === 401) {
         navigate("/login");
@@ -184,7 +216,9 @@ const initializeMap = () => {
         fetchOrderDetails();
       } else {
         // Handle error
-        throw new Error(`Failed to change order destination. Status: ${response.status}`);
+        throw new Error(
+          `Failed to change order destination. Status: ${response.status}`
+        );
       }
     } catch (error) {
       console.error("Error changing order destination: ", error);
@@ -219,72 +253,63 @@ const initializeMap = () => {
         <h1 className="text-3xl font-bold">Order Details</h1>
       </div>
 
-      <div className="container mx-auto mt-4">
-        {/* Display a list of orders and allow users to select one */}
-        <ul>
-          {orders.map((order) => (
-            <li key={order.id}>
-              <button onClick={() => navigate(`/OrderDetails/${order.id}`)}>
-                Order ID: {order.id}
-              </button>
-            </li>
-          ))}
-        </ul>
+      <div className="max-w-md mx-auto bg-white rounded-md overflow-hidden shadow-md m-4">
+        <div className="p-4">
         <h1 className="text-xl font-medium leading-6 text-gray-900 mb-2">
-          parcel_id: {orderDetails.parcel_id}
-        </h1>
-        <h1 className="text-lg font-medium leading-6 text-gray-900 mb-2">
-          Pick up location: {orderDetails.pickup_location}
-       
-
-        </h1>
-        <h1 className="text-lg font-medium leading-6 text-gray-900 mb-2">
-          Destination: {orderDetails.destination}
-        </h1>
-        <div className="flex justify-between items-center mb-2">
-          <p className="text-gray-500 font-medium">
-            Weight: {orderDetails.weight} Kg(s)
-          </p>
-          <p className="text-gray-500 font-medium">Price: {orderDetails.price} KSH</p>
-        </div>
-        <div className="text-gray-500 font-medium">
-          Status: {orderDetails.status.status}
+            parcel_id: {orderDetails.parcel_id}
+          </h1>
+          <h1 className="text-lg font-medium leading-6 text-gray-900 mb-2">
+            Pick up location: {orderDetails.pickup_location}
+          </h1>
+          <h1 className="text-lg font-medium leading-6 text-gray-900 mb-2">
+            Destination: {orderDetails.destination}
+          </h1>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-gray-500 font-medium">
+              Weight: {orderDetails.weight} Kg(s)
+            </p>
+            <p className="text-gray-500 font-medium">
+              Price: {orderDetails.price} KSH
+            </p>
+          </div>
+          <div className="text-gray-500 font-medium">
+            Status: {orderDetails.status.status}
+          </div>
         </div>
       </div>
 
       <div id="map" style={{ width: "100%", height: "300px" }}></div>
 
-
+  <div className="container mx-auto mt-4">
+    <div className="flex justify-between items-center p-4">
       <div>
-        <button onClick={handleCancel}>CancelParcel</button>
-      </div>
-
-      <div>
-        <label htmlFor="statusSelect">Status:</label>
-        <select
-          id="statusSelect"
-          // onChange={(e) => handleChangeStatus(e.target.value)}
-          disabled
-        >
-          <option value="In Transit">In Transit</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Canceled">Canceled</option>
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="destinationInput">Change Destination:</label>
+        <label htmlFor="destinationInput" className="text-gray-700">
+          Change Destination:
+        </label>
         <input
           type="text"
           id="destinationInput"
           value={newDestination}
-          onChange={(e) => setNewDestination} // Update the new destination state
+          onChange={(e) => setNewDestination(e.target.value)}
+          className="border p-2 rounded-md"
         />
-           <button onClick={handleChangeDestination}>Change Destination</button>
-
+        <button
+          onClick={handleChangeDestination}
+          className="bg-blue-500 text-white p-2 ml-2 rounded-md"
+        >
+          Change Destination
+        </button>
       </div>
-
+      <button
+        onClick={handleCancel}
+        className="bg-red-500 text-white p-2 rounded-md"
+      >
+        Cancel Parcel
+      </button>
     </div>
+  </div>
+</div>
+    
   );
 }
 

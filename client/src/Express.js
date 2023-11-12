@@ -4,13 +4,11 @@ const cors = require('cors');
 const app = express();
 
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
-// Handle preflight requests
-app.options('*', cors());
+// Your routes and other middleware go here
 
-// Your routes and other middleware
-
-app.listen(5555, () => {
-  console.log('Server is running on port 5555');
+const PORT = 5555;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

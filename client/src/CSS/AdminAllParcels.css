@@ -1,0 +1,54 @@
+/* AdminAllParcels.css */
+
+
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: background-color 0.3s ease; /* Add a smooth background color transition */
+}
+
+.card:hover {
+  cursor: pointer;
+  background-color: #f0f4f8; /* Change the color on hover */
+}
+
+.card h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #4a5568;
+  margin-bottom: 4px;
+}
+
+.card .status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status span {
+  margin-right: 8px;
+}
+
+
+.arrow-left {
+  fill: #4a5568; /* Change the color as needed */
+  transition: fill 0.3s ease; /* Add a smooth color transition */
+}
+
+.arrow-left:hover {
+  fill: #1a202c; /* Change the color on hover */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px; /* Adjust the margin as needed */
+}

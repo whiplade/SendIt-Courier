@@ -10,6 +10,18 @@ fake = Faker()
 descriptions = ["Fragile", "Do not shake", "This side up", "Do not stack", "Sensitive equipment", "Perishable", "Keep dry", "Keep away from heat", "Hazardous material", "Heavy", "Top load only"]
 pickup_locations = ["Thika", "Nakuru", "Mombasa", "Kisumu", "Kitale", "Nairobi", "Bungoma", "Bomet", "Nanyuki", "Nyeri", "Moyale", "Marsabit", "Nanyuki", "Meru", "Embu", "Malindi", "Lamu", "Karatina"]
 destinations = ["Voi", "Garissa", "Isiolo", "Wajir", "Kapenguria", "Homabay", "Kiambu", "Migori", "Siaya", "Ruiru", "Juja", "Kikuyu", "Machakos", "Nyahururu", "Webuye", "Chogoria", "Kajiado"]
+def create_admin(username, email, password, role):
+    # Check if the admin user already exists
+    admin = User.query.filter_by(username=username).first()
+
+    # If the admin user doesn't exist, create it
+    if not admin:
+        hashed_password = generate_password_hash(password).decode('utf-8')
+        admin = User(username=username, email=email, password=hashed_password, role=role)
+        db.session.add(admin)
+        db.session.commit()
+
+create_admin('admin', 'nathan@admin.com', 'admin_password', 'admin')
 
 def seed_database():
     with app.app_context():

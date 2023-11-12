@@ -1,9 +1,9 @@
 import OrderForm from "../components/OrderForm";
-
+import "./CreateOrder.css"
 
 function CreateOrder() {
   return (
-    <div>
+    <div className="order-image">
       <OrderForm />
     </div>
   );

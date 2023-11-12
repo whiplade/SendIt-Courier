@@ -1,39 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import "../CSS/Home.css";
 
-const NavBar = () => (
-    <div className='Navcomponent'>
-      <img src='https://cdn-icons-png.flaticon.com/128/75/75784.png?uid=R122397876&track=ais' alt='alt' className='nav-icon' />
-      <div className='headers'>
-        <h1>
-          <Link to="/" className="header">
-            SENDIT
-          </Link>
-        </h1>
-      </div>
-      <div className='Nav'>
-        <div className="NavBar">
-          <Link to="/about" className="nav-link">
-            About
-          </Link>
-          <Link to="/pricing" className="nav-link">
-            Pricing
-          </Link>
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
-          <Link to="/signup" className="nav-link">
-            SignUp
-          </Link>
-          <Link to="/createorder" className="nav-link">
-            CreateOrder
-          </Link>
-          <Link to="/orders" className="nav-link">
-            Orders
-          </Link>
+export default function Home() {
+    return(
+        <>
+        {<NavBar />}
+        <div className="background-image">
+            <img src="https://images.unsplash.com/photo-1512909006721-3d6018887383?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGFyY2VsfGVufDB8fDB8fHww" alt=""/>
         </div>
-      </div>
-    </div>
-  );
+        {<Footer />}
+        </>
+        
+    )
+}
 
-export default NavBar;

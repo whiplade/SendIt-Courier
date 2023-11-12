@@ -1,0 +1,27 @@
+/* // OrderList.css */
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.card:hover {
+  background-color: #728e9e;
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #4a5568;
+  margin-bottom: 4px;
+}
+
+/* Add other styles as needed */

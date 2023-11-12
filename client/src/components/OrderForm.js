@@ -36,8 +36,8 @@ export default function OrderForm() {
     recipient_phone_number: "",
     pickup_location: "",
     destination: "",
-    status:"pending",
-    present_location:"warehouse"
+    status:"Pending",
+    present_location:"Warehouse"
   });
 
   const [errors, setErrors] = useState({});
@@ -132,7 +132,7 @@ export default function OrderForm() {
             showConfirmButton: false,
             timer: 1500,
           });
-          setTimeout(() => navigate("/Orders"), 1500);
+          setTimeout(() => navigate("/orders"), 1500);
         } else {
           setErrors(data.errors);
         }
@@ -187,6 +187,7 @@ export default function OrderForm() {
   return (
     
       <>
+      
         <div className="hidden sm:block" aria-hidden="true">
           <div className="py-5">
             <div className="border-t border-gray-200" />
@@ -373,12 +374,13 @@ export default function OrderForm() {
                         Description
                       </label>
                       <div className="mt-1">
-                        <textarea
+                        <input
+                        type="text"
                           id="description"
                           name="description"
                           aria-describedby="description"
                           rows={4}
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           // defaultValue={""}
                           value={formData.description}
                           onChange={handleInputChange}
@@ -431,45 +433,7 @@ export default function OrderForm() {
           <span className="text-xs text-red-600">{errors.recipient_phone_number[0]}!</span>
         )}
       </div>
-      <div className="col-span-6 sm:col-span-2">
-  <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-    Status
-  </label>
-  <input
-    type="text"
-    name="status"
-    id="status"
-    value={formData.status}
-    readOnly 
-    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    placeholder="Pending"
-  />
-  {errors.status && (
-    <span className="text-xs text-red-600">{errors.status[0]}!</span>
-  )}
-</div>
-
-<div className="col-span-6 sm:col-span-2">
-  <label htmlFor="present_location" className="block text-sm font-medium text-gray-700">
-    Present Location
-  </label>
-  <input
-    type="text"
-    name="present_location"
-    id="present_location"
-    value={formData.present_location}
-    readOnly 
-    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-    placeholder="Warehouse"
-  />
-  {errors.present_location && (
-    <span className="text-xs text-red-600">{errors.present_location[0]}!</span>
-  )}
-</div>
-
-      
-
-                <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+      <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
                     type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-slate-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
