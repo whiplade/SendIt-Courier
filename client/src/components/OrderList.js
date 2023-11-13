@@ -8,7 +8,6 @@ function OrderList() {
   const [parcels, setParcels] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // View single order details of parcel upon click
   const viewSingleOrder = (parcel_id) => {
     navigate(`/OrderDetails`);
   };
@@ -47,7 +46,7 @@ function OrderList() {
       } catch (error) {
         console.error("Error fetching parcel data: ", error);
       } finally {
-        setLoading(false); // Ensure setLoading(false) is called in both success and error cases.
+        setLoading(false); 
       }
     };
 
@@ -86,7 +85,6 @@ function OrderList() {
             </h2>
             <p>Destination: {parcel.destination}</p>
             <p>Pickup Location: {parcel.pickup_location}</p>
-            {/* Add more details to display in the card if needed */}
           </div>
         ))}
       </div>

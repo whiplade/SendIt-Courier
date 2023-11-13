@@ -4,7 +4,6 @@ import {
   CheckIcon,
   XCircleIcon,
   ArrowPathIcon,
-  ArrowLeftIcon
 } from "@heroicons/react/20/solid";
 import { Link, useNavigate } from "react-router-dom";
 import "../CSS/AdminAllParcels.css";
@@ -70,10 +69,6 @@ export default function AdminAllParcels() {
     <div>
       <div className="border-b border-gray-200 flex justify-between items-center p-4">
         <div className="flex items-center">
-          <ArrowLeftIcon
-            className="h-6 w-6 text-gray-500 mr-2 cursor-pointer"
-            onClick={handleBackClick}
-          />
         </div>
         <div className="flex justify-center mt-4">
           <div className="button-container">

@@ -208,10 +208,8 @@ export default function OrderForm() {
               </p>
             </div>
             <div className="rounded-xl relative mt-6">
-              {/* Overlay */}
               <div className="absolute w-full h-full bg-black/50 rounded-xl text-white">
                 <p className="font-bold text-2xl px-2 pt-4">
-                  {/* Ensuring Your Convenience! */}
                 </p>
                 <p className="px-2">Deliveries Wherever! Whenever!</p>
               </div>
@@ -381,7 +379,6 @@ export default function OrderForm() {
                           aria-describedby="description"
                           rows={4}
                           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          // defaultValue={""}
                           value={formData.description}
                           onChange={handleInputChange}
                           required

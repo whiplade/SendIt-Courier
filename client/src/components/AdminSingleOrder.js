@@ -41,16 +41,16 @@ export default function AdminSingleOrder() {
     } catch (error) {
       console.error(`Error fetching ${id ? 'parcel ' + id : 'all parcels'} details:`, error);
       setLoading(false);
-      // Handle the error, you might want to display an error message
     }
   };
 
   useEffect(() => {
     console.log("Inside useEffect");
     if (parcel_id) {
-      fetchData(); // Fetch details for a specific parcel
+      fetchData(); 
     } else {
-      fetchAllParcels(); // Fetch details for all parcels
+      fetchAllParcels(); 
+      
     }
   }, [parcel_id]);
 
@@ -102,7 +102,6 @@ export default function AdminSingleOrder() {
             .then((res) => res.json())
             .then((data) => {
               Swal.fire("Order Cancelled!", "", "success");
-              // Handle UI update if needed
             })
             .catch((error) => {
               console.error("Error canceling order:", error);
@@ -151,7 +150,6 @@ export default function AdminSingleOrder() {
       });
   };
 
-  // Check if order is loaded before rendering
   if (loading) {
     return <div className="h-screen">Loading...</div>;
   }
@@ -179,7 +177,6 @@ export default function AdminSingleOrder() {
             Delivery Information
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            {/* Personal details and recipient. */}
           </p>
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -197,7 +194,6 @@ export default function AdminSingleOrder() {
               <dd className="mt-1 text-sm text-gray-900">{order[0].description}</dd>
             </div>
             <div>
-              {/* Add recipient's name and phone number here */}
               <dt className="text-sm font-medium text-gray-500">Recipient's Name</dt>
               <dd className="mt-1 text-sm text-gray-900">{order[0].recipient_name}</dd>
             </div>

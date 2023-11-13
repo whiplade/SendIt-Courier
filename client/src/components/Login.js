@@ -41,7 +41,6 @@ function Login() {
         }
       })
       .then((data) => {
-        // Check if there are no errors in the response data
         if (!data.errors) {
           Swal.fire({
             position: "top-end",
@@ -59,9 +58,7 @@ function Login() {
             }
           }, 1500);
         } else {
-          // Handle errors in the response data
           setErrors(data.errors);
-          // Additional: Show an alert or take other actions to notify the user
           Swal.fire({
             icon: "error",
             title: "Login failed",
@@ -70,9 +67,7 @@ function Login() {
         }
       })
       .catch((error) => {
-        // Handle network or other errors
         console.error("Login error:", error);
-        // Additional: Show an alert or take other actions to notify the user
         Swal.fire({
           icon: "error",
           title: "Login failed",

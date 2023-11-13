@@ -18,7 +18,6 @@ import AdminSingleOrder from './components/AdminSingleOrder';
 const App = () => (
   <Router>
     <div className="App">
-      {/* <NavBar /> */}
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/pricing" element={<Pricing />} />

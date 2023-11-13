@@ -176,20 +176,6 @@ def user_parcels():
     response = jsonify(parcels_list)
     return response
 
-# @app.route('/user_parcels', methods=['GET'])
-# @jwt_required()
-# def get_parcel_details(parcel_id):
-#     user_id = get_jwt_identity()
-    
-#     # Check if the parcel belongs to the authenticated user
-#     parcel = Parcel.query.filter_by(parcel_id=parcel_id, user_id=user_id).first()
-
-#     if parcel:
-#         parcel_details = parcel.serialize()
-#         return jsonify(parcel_details)
-#     else:
-#         return jsonify({'error': 'Parcel not found or does not belong to the user'}), 404
-    
 
 @app.route('/change_destination/<int:parcel_id>', methods=['GET', 'PATCH'])
 @jwt_required()

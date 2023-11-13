@@ -11,7 +11,7 @@ function SignUp() {
     email: "",
     password: "",
     password_confirmation: "",
-    role: "user", // Set the default role to "user"
+    role: "user", 
   });
 
   const [errors, setErrors] = useState({});
@@ -31,8 +31,6 @@ function SignUp() {
       formData.email.toLowerCase() === 'nathan@admin.com' &&
       formData.password === '1234'
     ) {
-      // Admin login successful
-      // You may want to handle admin-specific logic here
       Swal.fire({
         position: 'top-end',
         icon: 'success',

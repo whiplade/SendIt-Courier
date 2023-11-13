@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
-// import "../CSS/OrderDetails.css";
 
 let currentLocationMarker;
 let newDestinationMarker;
@@ -18,7 +17,7 @@ function OrderDetails() {
   const [newDestination, setNewDestination] = useState({
     latitude: 0,
     longitude: 0,
-  }); // State to store the new destination
+  }); 
 
   const loadGoogleMapsAPI = () => {
     const script = document.createElement("script");
@@ -48,7 +47,6 @@ function OrderDetails() {
         mapOptions
       );
 
-      // Assign a marker for the current location (orderDetails.latitude, orderDetails.longitude) to the variable
       currentLocationMarker = new window.google.maps.Marker({
         position: {
           lat: orderDetails.latitude,
@@ -58,7 +56,6 @@ function OrderDetails() {
         title: "Current Location",
       });
 
-      // Add a marker for the new destination (newDestination.latitude, newDestination.longitude)
       if (newDestination.latitude && newDestination.longitude) {
         newDestinationMarker = new window.google.maps.Marker({
           position: {
@@ -167,10 +164,8 @@ function OrderDetails() {
       }
 
       if (response.ok) {
-        // Handle success (you can redirect to a success page or perform other actions)
         navigate("/success");
       } else {
-        // Handle error
         throw new Error(
           `Failed to cancel order. Status: ${response.status}`
         );
@@ -212,10 +207,8 @@ function OrderDetails() {
       }
 
       if (response.ok) {
-        // Refresh the order details or update the UI as needed
         fetchOrderDetails();
       } else {
-        // Handle error
         throw new Error(
           `Failed to change order destination. Status: ${response.status}`
         );
