@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import React, { useEffect, useState, useRef } from "react";
@@ -15,11 +16,13 @@ export default function AdminSingleOrder() {
   const [isLoaded, setIsLoaded] = useState(false);
   const locationRef = useRef(null);
   const [status, setStatus] = useState("");
+  
 
-  const fetchData = async () => {
+  const fetchData = async (id) => {
     try {
-      console.log("Fetching data...");
-      const response = await fetch(`http://127.0.0.1:5555/user_parcels`, {
+      console.log(`Fetching data for ${id ? 'parcel ' + id : 'all parcels'}...`);
+      const url = id ? `http://127.0.0.1:5555/parcel/${parcel_id}` : `http://127.0.0.1:5555/admin/all_parcels`;
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem("access_token")}`,
@@ -36,7 +39,7 @@ export default function AdminSingleOrder() {
       setOrder(data);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching order details:', error);
+      console.error(`Error fetching ${id ? 'parcel ' + id : 'all parcels'} details:`, error);
       setLoading(false);
       // Handle the error, you might want to display an error message
     }
@@ -44,13 +47,12 @@ export default function AdminSingleOrder() {
 
   useEffect(() => {
     console.log("Inside useEffect");
-    if (!parcel_id) {
-      console.error("Parcel ID is not defined");
-      return;
+    if (parcel_id) {
+      fetchData(); // Fetch details for a specific parcel
+    } else {
+      fetchAllParcels(); // Fetch details for all parcels
     }
-
-    fetchData();
-  }, [parcel_id]); // Removed setOrder from the dependency array
+  }, [parcel_id]);
 
   const handlePlaceChanged = () => {
     if (locationRef.current) {
