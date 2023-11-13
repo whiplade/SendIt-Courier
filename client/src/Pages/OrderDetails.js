@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import BeatLoader from "react-spinners/BeatLoader";
 import { useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
-import "../CSS/OrderDetails.css";
+// import "../CSS/OrderDetails.css";
 
 let currentLocationMarker;
 let newDestinationMarker;
